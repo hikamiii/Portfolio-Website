@@ -141,7 +141,7 @@ export const projects: Project[] = [
     description: "A game about scaring customers with your own voice to gain points",
     image: "/project-thumbnails/ghost-inc.png",
     fallbackImage: "https://images.unsplash.com/photo-1613992519026-c1a3bb8341ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
-    itchUrl: "https://sankalpagames.itch.io/ghost-inc",
+    itchUrl: "https://hikamiii.itch.io/ghost-house",
     itchLabel: "Play on itch.io",
     tags: ["Action", "Voice Control"],
     markdown: ghostIncContent,

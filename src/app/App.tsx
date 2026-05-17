@@ -36,6 +36,10 @@ function easeInOutCubic(progress: number) {
     : 1 - Math.pow(-2 * progress + 2, 3) / 2;
 }
 
+function easeOutCubic(progress: number) {
+  return 1 - Math.pow(1 - progress, 3);
+}
+
 const SECTION_SCROLL_OFFSET = 40;
 const CV_FILE_NAME = 'Nguyen Duc Son Hai_CV.pdf';
 const CV_PDF_URL = encodeURI(`${import.meta.env.BASE_URL}cv/${CV_FILE_NAME}`);
@@ -572,13 +576,13 @@ export default function App() {
       targetElement.getBoundingClientRect().top + window.scrollY - SECTION_SCROLL_OFFSET
     );
     const distance = targetY - startY;
-    const duration = 700;
+    const duration = 420;
     const startTime = performance.now();
 
     const step = (currentTime: number) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      const easedProgress = easeInOutCubic(progress);
+      const easedProgress = easeOutCubic(progress);
 
       window.scrollTo(0, startY + distance * easedProgress);
 
@@ -614,18 +618,42 @@ export default function App() {
 
   useEffect(() => {
     // Warm up the image cache so the first modal open doesn't have to fetch/decode banners.
-    const run = () => {
-      preloadImage('/cv/cv-banner.png');
+    const queue: string[] = [];
 
-      for (const project of projects) {
-        preloadImage(project.image);
-        preloadImage(`/project-banners/${project.slug}-banner.png`);
+    queue.push('/cv/cv-banner.png');
 
-        const wpImages = project.workingProcess?.images ?? [];
-        for (const image of wpImages) {
-          preloadImage(image.src);
-        }
+    for (const project of projects) {
+      queue.push(project.image);
+      queue.push(`/project-banners/${project.slug}-banner.png`);
+
+      const wpImages = project.workingProcess?.images ?? [];
+      for (const image of wpImages) {
+        queue.push(image.src);
       }
+    }
+
+    let cancelled = false;
+
+    const drain = (deadline?: { timeRemaining: () => number }) => {
+      if (cancelled) {
+        return;
+      }
+
+      const hasBudget = () => (deadline ? deadline.timeRemaining() > 8 : true);
+      while (queue.length > 0 && hasBudget()) {
+        preloadImage(queue.shift()!);
+      }
+
+      if (queue.length === 0) {
+        return;
+      }
+
+      if ('requestIdleCallback' in window) {
+        (window as any).requestIdleCallback(drain, { timeout: 1500 });
+        return;
+      }
+
+      window.setTimeout(() => drain(), 0);
     };
 
     if (typeof window === 'undefined') {
@@ -633,12 +661,18 @@ export default function App() {
     }
 
     if ('requestIdleCallback' in window) {
-      const idleId = (window as any).requestIdleCallback(run, { timeout: 1500 });
-      return () => (window as any).cancelIdleCallback?.(idleId);
+      const idleId = (window as any).requestIdleCallback(drain, { timeout: 1500 });
+      return () => {
+        cancelled = true;
+        (window as any).cancelIdleCallback?.(idleId);
+      };
     }
 
-    const timeoutId = window.setTimeout(run, 300);
-    return () => window.clearTimeout(timeoutId);
+    const timeoutId = window.setTimeout(() => drain(), 300);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timeoutId);
+    };
   }, []);
 
   useEffect(() => {
@@ -739,8 +773,8 @@ export default function App() {
             <h1 className="text-5xl leading-none">Nguyen Duc Son Hai</h1>
             <div className="flex items-center gap-6">
               <nav className="flex items-center gap-8 text-[1.35rem]">
-                <a href="#about" onClick={(event) => handleSectionLinkClick(event, 'about')} className="text-foreground transition-colors hover:text-primary">About Me</a>
                 <a href="#projects" onClick={(event) => handleSectionLinkClick(event, 'projects')} className="text-foreground transition-colors hover:text-primary">Projects</a>
+                <a href="#about" onClick={(event) => handleSectionLinkClick(event, 'about')} className="text-foreground transition-colors hover:text-primary">About Me</a>
                 <a href="#cv" onClick={(event) => handleSectionLinkClick(event, 'cv')} className="text-foreground transition-colors hover:text-primary">CV</a>
               </nav>
               <div className="flex items-center gap-2 self-center rounded-full border border-border bg-card p-1">
@@ -801,24 +835,6 @@ export default function App() {
           </div>
         </header>
 
-        <section id="about" className="mb-24 scroll-mt-8">
-          <h2 className="mb-8 text-3xl">About</h2>
-          <div className="max-w-3xl">
-            <p className="mb-4 text-foreground leading-relaxed">
-              I'm a game designer and developer in Ho Chi Minh City, Vietnam, studying at RMIT University. I build playful gameplay systems, experiment with mechanics, and explore how interaction and UI shape player experience.
-            </p>
-            <p className="mb-4 text-foreground leading-relaxed">
-              My work often starts with rapid prototyping and iteration. I like testing ideas quickly, seeing how players respond, and refining the design through experimentation. Because I work across both design and programming, I enjoy bridging creative ideas with technical implementation to turn concepts into playable experiences.
-            </p>
-            <p className="mb-4 text-foreground leading-relaxed">
-              I'm also interested in pushing beyond my comfort zone, such as exploring new design approaches, experimenting with unfamiliar mechanics, and discovering different ways games can convey ideas. While many of my projects focus on gameplay systems, I'm currently interested in creating deeper, more narrative-driven experiences that leave a lasting impression on players.
-            </p>
-            <p className="text-foreground leading-relaxed">
-              In the long run, I hope to continue experimenting, collaborating with other developers, and eventually build toward founding my own indie studio, creating games that combine thoughtful mechanics with meaningful storytelling.
-            </p>
-          </div>
-        </section>
-
         <section id="projects" className="mb-24 scroll-mt-8">
           <h2 className="mb-8 text-3xl">Projects</h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -851,6 +867,24 @@ export default function App() {
                 </div>
               </a>
             ))}
+          </div>
+        </section>
+
+        <section id="about" className="mb-24 scroll-mt-8">
+          <h2 className="mb-8 text-3xl">About</h2>
+          <div className="max-w-3xl">
+            <p className="mb-4 text-foreground leading-relaxed">
+              I'm a game designer and developer in Ho Chi Minh City, Vietnam, studying at RMIT University. I build playful gameplay systems, experiment with mechanics, and explore how interaction and UI shape player experience.
+            </p>
+            <p className="mb-4 text-foreground leading-relaxed">
+              My work often starts with rapid prototyping and iteration. I like testing ideas quickly, seeing how players respond, and refining the design through experimentation. Because I work across both design and programming, I enjoy bridging creative ideas with technical implementation to turn concepts into playable experiences.
+            </p>
+            <p className="mb-4 text-foreground leading-relaxed">
+              I'm also interested in pushing beyond my comfort zone, such as exploring new design approaches, experimenting with unfamiliar mechanics, and discovering different ways games can convey ideas. While many of my projects focus on gameplay systems, I'm currently interested in creating deeper, more narrative-driven experiences that leave a lasting impression on players.
+            </p>
+            <p className="text-foreground leading-relaxed">
+              In the long run, I hope to continue experimenting, collaborating with other developers, and eventually build toward founding my own indie studio, creating games that combine thoughtful mechanics with meaningful storytelling.
+            </p>
           </div>
         </section>
 
@@ -915,8 +949,8 @@ export default function App() {
           <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground">&copy; 2026 Nguyen Duc Son Hai. All rights reserved.</p>
             <div className="flex gap-4">
-              <a href="#about" onClick={(event) => handleSectionLinkClick(event, 'about')} className="text-sm text-muted-foreground transition-colors hover:text-primary">About</a>
               <a href="#projects" onClick={(event) => handleSectionLinkClick(event, 'projects')} className="text-sm text-muted-foreground transition-colors hover:text-primary">Projects</a>
+              <a href="#about" onClick={(event) => handleSectionLinkClick(event, 'about')} className="text-sm text-muted-foreground transition-colors hover:text-primary">About</a>
               <a href="#cv" onClick={(event) => handleSectionLinkClick(event, 'cv')} className="text-sm text-muted-foreground transition-colors hover:text-primary">CV</a>
             </div>
           </div>
