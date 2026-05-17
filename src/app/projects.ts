@@ -38,7 +38,7 @@ export const projects: Project[] = [
     image: "/project-thumbnails/stumble-couple.png",
     fallbackImage: "https://images.unsplash.com/photo-1768933294252-92470e942eea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
     itchUrl: "https://hikamiii.itch.io/stumble-couple",
-    itchLabel: "Open on itch.io",
+    itchLabel: "Play on itch.io",
     tags: ["Narrative", "Co-op"],
     workingProcess: {
       images: [
@@ -63,6 +63,22 @@ export const projects: Project[] = [
     itchUrl: "https://hikamiii.itch.io/fih",
     itchLabel: "Play on itch.io",
     tags: ["Adventure", "Puzzle"],
+    workingProcess: {
+      images: [
+        {
+          src: "/working-process/fih/work-1.png",
+          alt: "Fih working process image 1",
+        },
+        {
+          src: "/working-process/fih/work-2.png",
+          alt: "Fih working process image 2",
+        },
+        {
+          src: "/working-process/fih/work-3.png",
+          alt: "Fih working process image 3",
+        },
+      ],
+    },
     markdown: fihContent,
   },
   {
@@ -74,6 +90,22 @@ export const projects: Project[] = [
     itchUrl: "https://hikamiii.itch.io/echocroc",
     itchLabel: "Play on itch.io",
     tags: ["Platformer", "Puzzle"],
+    workingProcess: {
+      images: [
+        {
+          src: "/working-process/echo-croc/work-1.png",
+          alt: "EchoCroc working process image 1",
+        },
+        {
+          src: "/working-process/echo-croc/work-2.png",
+          alt: "EchoCroc working process image 2",
+        },
+        {
+          src: "/working-process/echo-croc/work-3.png",
+          alt: "EchoCroc working process image 3",
+        },
+      ],
+    },
     markdown: echoCrocContent,
   },
   {
@@ -85,6 +117,22 @@ export const projects: Project[] = [
     itchUrl: "https://hikamiii.itch.io/bee-ware",
     itchLabel: "Play on itch.io",
     tags: ["Strategy", "RTS"],
+    workingProcess: {
+      images: [
+        {
+          src: "/working-process/bee-ware/work-1.png",
+          alt: "Bee-Ware working process image 1",
+        },
+        {
+          src: "/working-process/bee-ware/work-2.png",
+          alt: "Bee-Ware working process image 2",
+        },
+        {
+          src: "/working-process/bee-ware/work-3.png",
+          alt: "Bee-Ware working process image 3",
+        },
+      ],
+    },
     markdown: beeWareContent,
   },
   {
@@ -94,7 +142,7 @@ export const projects: Project[] = [
     image: "/project-thumbnails/ghost-inc.png",
     fallbackImage: "https://images.unsplash.com/photo-1613992519026-c1a3bb8341ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
     itchUrl: "https://sankalpagames.itch.io/ghost-inc",
-    itchLabel: "Open on itch.io",
+    itchLabel: "Play on itch.io",
     tags: ["Action", "Voice Control"],
     markdown: ghostIncContent,
   },
@@ -107,6 +155,24 @@ export const projects: Project[] = [
     itchUrl: "https://topeydopey.itch.io/one-spoon-at-a-time",
     itchLabel: "Play on itch.io",
     tags: ["Experimental", "Comedy"],
+    workingProcess: {
+      images: [
+        {
+          src: "/working-process/one-spoon-at-a-time/work-1.png",
+          alt: "One Spoon at a Time working process image 1",
+        },
+        {
+          src: "/working-process/one-spoon-at-a-time/work-2.png",
+          alt: "One Spoon at a Time working process image 2",
+        },
+      ],
+      documents: [
+        {
+          label: "One Spoon at a Time GDD (PDF)",
+          url: "/working-process/one-spoon-at-a-time/gdd.pdf",
+        },
+      ],
+    },
     markdown: oneSpoonAtATimeContent,
   },
   {
@@ -116,7 +182,7 @@ export const projects: Project[] = [
     image: "/project-thumbnails/runic-arcana.png",
     fallbackImage: "https://images.unsplash.com/photo-1709229001931-39ef155e40f8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
     itchUrl: "https://topeydopey.itch.io/runic-arcana",
-    itchLabel: "Open on itch.io",
+    itchLabel: "Play on itch.io",
     tags: ["Fantasy", "Adventure"],
     workingProcess: {
       images: [

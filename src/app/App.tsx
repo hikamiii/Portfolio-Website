@@ -39,7 +39,6 @@ function easeInOutCubic(progress: number) {
 const SECTION_SCROLL_OFFSET = 40;
 const CV_FILE_NAME = 'Nguyen Duc Son Hai_CV.pdf';
 const CV_PDF_URL = encodeURI(`${import.meta.env.BASE_URL}cv/${CV_FILE_NAME}`);
-const CV_PREVIEW_PARAMS = '#view=FitH&toolbar=0&navpanes=0&scrollbar=0';
 const CV_MODAL_PARAMS = '#view=FitV&toolbar=0&navpanes=0&scrollbar=0';
 
 function withBaseUrl(url: string) {
@@ -71,6 +70,115 @@ function ItchIoIcon() {
   );
 }
 
+function useElementWidth<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) {
+      return;
+    }
+
+    const updateWidth = () => setWidth(element.clientWidth);
+    updateWidth();
+
+    const resizeObserver = new ResizeObserver(updateWidth);
+    resizeObserver.observe(element);
+
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  return [ref, width] as const;
+}
+
+function CvPreviewPdf({ onOpen }: { onOpen: () => void }) {
+  void CV_PDF_URL;
+  const [bannerAspectRatio, setBannerAspectRatio] = useState<number | null>(null);
+
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      className="relative block w-full overflow-hidden rounded-[1rem] border border-border bg-white"
+      aria-label="Open full CV"
+    >
+      <div
+        className="w-full bg-white"
+        style={bannerAspectRatio ? ({ aspectRatio: String(bannerAspectRatio) } as CSSProperties) : undefined}
+      >
+        <img
+          src={withBaseUrl('/cv/cv-banner.png')}
+          alt="CV preview banner"
+          className="h-full w-full object-contain"
+          loading="lazy"
+          onLoad={(event) => {
+            const img = event.currentTarget;
+            if (img.naturalWidth > 0 && img.naturalHeight > 0) {
+              setBannerAspectRatio(img.naturalWidth / img.naturalHeight);
+            }
+          }}
+        />
+      </div>
+    </button>
+  );
+
+  /* Old react-pdf preview code (disabled)
+  if (false) {
+    return (
+      <div
+        ref={containerRef}
+        className="relative h-[24rem] overflow-y-auto rounded-[1rem] border border-border bg-white"
+      onClick={onOpen}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onOpen();
+        }
+      }}
+    >
+      <Document
+        file={{ url: absolutePdfUrl }}
+        options={{ disableRange: true, disableStream: true }}
+        onLoadSuccess={({ numPages: loadedPages }) => setNumPages(loadedPages)}
+        onLoadError={(error) => {
+          setLoadError(error instanceof Error ? error.message : String(error));
+          // eslint-disable-next-line no-console
+          console.error('CV preview PDF load error', error);
+        }}
+        onSourceError={(error) => {
+          setLoadError(error instanceof Error ? error.message : String(error));
+          // eslint-disable-next-line no-console
+          console.error('CV preview PDF source error', error);
+        }}
+        loading={<div className="flex h-[24rem] items-center justify-center text-sm text-muted-foreground">Loading…</div>}
+        error={<div className="flex h-[24rem] items-center justify-center text-sm text-muted-foreground">Failed to load.</div>}
+      >
+        {containerWidth > 0 && numPages > 0 ? (
+          <div className="space-y-4 p-3">
+            {Array.from({ length: numPages }, (_, index) => (
+              <div key={index + 1} className="overflow-hidden rounded-[0.75rem] border border-border bg-white">
+                <Page
+                  pageNumber={index + 1}
+                  width={containerWidth - 24}
+                  renderTextLayer={false}
+                  renderAnnotationLayer={false}
+                />
+              </div>
+            ))}
+          </div>
+        ) : null}
+      </Document>
+
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true" />
+    </div>
+  );
+  }
+  */
+}
+
 function MarkdownContent({ content, project }: { content: string; project: Project }) {
   const blocks = content
     .trim()
@@ -92,7 +200,7 @@ function MarkdownContent({ content, project }: { content: string; project: Proje
             >
               <span className="absolute inset-0 origin-left scale-x-0 bg-primary transition-transform duration-300 ease-out group-hover:scale-x-100" />
               <span className="relative z-10 transition-colors duration-300 group-hover:text-primary-foreground">
-                {project.itchLabel ?? "Open on itch.io"}
+                {project.itchLabel ?? "Play on itch.io"}
               </span>
               <ExternalLink className="relative z-10 h-4 w-4 transition-colors duration-300 group-hover:text-primary-foreground" />
             </a>
@@ -205,16 +313,18 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
             <X className="h-5 w-5" />
           </button>
 
-          <div className="aspect-[16/8] bg-muted">
-            <ImageWithFallback
-              src={withBaseUrl(project.image)}
-              fallbackSrc={project.fallbackImage}
-              alt={project.title}
-              className="h-full w-full object-cover"
-            />
+          <div className="overflow-hidden rounded-t-[1.75rem] border-b border-border bg-muted">
+            <div className="h-[34vh] min-h-[450px] max-h-[500px]">
+              <ImageWithFallback
+                src={withBaseUrl(`/project-banners/${project.slug}-banner.png`)}
+                fallbackSrc={withBaseUrl(project.image)}
+                alt={project.title}
+                className="block h-full w-full object-cover"
+              />
+            </div>
           </div>
 
-          <div className="px-8 pb-[10%] pt-8 md:px-[12%] md:pt-10 md:pb-[10%] lg:px-[20%]">
+          <div className="px-6 pb-[10%] pt-6 md:px-[10%] md:pt-8 md:pb-[10%] lg:px-[16%]">
             <div className="mb-6 flex flex-wrap gap-2">
               {project.tags.map((tag) => (
                 <span
@@ -233,16 +343,16 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
                 <h2 className="mb-6 text-3xl">Working Process</h2>
 
                 {project.workingProcess.images && project.workingProcess.images.length > 0 && (
-                  <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-4">
                     {project.workingProcess.images.map((image) => (
                       <figure
                         key={image.src}
-                        className="overflow-hidden rounded-[1rem] border border-border bg-muted"
+                        className="overflow-hidden rounded-[1rem] border border-border bg-white"
                       >
                         <img
                           src={withBaseUrl(image.src)}
                           alt={image.alt}
-                          className="h-full w-full object-cover"
+                          className="block h-auto max-h-[70vh] w-full object-contain"
                           loading="lazy"
                         />
                         {image.caption && (
@@ -551,7 +661,7 @@ export default function App() {
               </div>
             </div>
           </div>
-          <p className="mb-6 text-lg text-muted-foreground">Game Developer</p>
+          <p className="mb-6 text-lg text-muted-foreground">Game Designer / Developer</p>
           <div className="flex gap-4">
             <a
               href="https://hikamiii.itch.io"
@@ -692,18 +802,7 @@ export default function App() {
 
               <div className="bg-muted p-4">
                 <div className="relative">
-                  <div className="relative overflow-hidden rounded-[1rem] border border-border bg-white">
-                    <iframe
-                      src={`${CV_PDF_URL}${CV_PREVIEW_PARAMS}`}
-                      title="Nguyen Duc Son Hai CV"
-                      className="pointer-events-none h-[24rem] w-full"
-                    />
-                  </div>
-                  <div
-                    className="absolute inset-0 cursor-pointer"
-                    aria-hidden="true"
-                    onClick={openCvPreview}
-                  />
+                  <CvPreviewPdf onOpen={openCvPreview} />
                 </div>
               </div>
             </div>
