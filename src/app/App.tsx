@@ -590,19 +590,19 @@ export default function App() {
         </header>
 
         <section id="about" className="mb-24 scroll-mt-8">
-          <h2 className="mb-8 text-3xl">About Me</h2>
+          <h2 className="mb-8 text-3xl">About</h2>
           <div className="max-w-3xl">
             <p className="mb-4 text-foreground leading-relaxed">
-              I'm an indie game developer passionate about creating unique gaming experiences that challenge conventional gameplay mechanics.
-              My work explores the intersection of narrative, mechanics, and player agency.
+              I'm a game designer and developer in Ho Chi Minh City, Vietnam, studying at RMIT University. I build playful gameplay systems, experiment with mechanics, and explore how interaction and UI shape player experience.
             </p>
             <p className="mb-4 text-foreground leading-relaxed">
-              From platformers that use your past-self as a tool to voice-controlled horror experiences, I enjoy experimenting
-              with unconventional ideas that push the boundaries of what games can be.
+              My work often starts with rapid prototyping and iteration. I like testing ideas quickly, seeing how players respond, and refining the design through experimentation. Because I work across both design and programming, I enjoy bridging creative ideas with technical implementation to turn concepts into playable experiences.
+            </p>
+            <p className="mb-4 text-foreground leading-relaxed">
+              I'm also interested in pushing beyond my comfort zone, such as exploring new design approaches, experimenting with unfamiliar mechanics, and discovering different ways games can convey ideas. While many of my projects focus on gameplay systems, I'm currently interested in creating deeper, more narrative-driven experiences that leave a lasting impression on players.
             </p>
             <p className="text-foreground leading-relaxed">
-              When I'm not developing games, I'm exploring new game design concepts, playing indie titles, and dreaming up
-              the next weird and wonderful game mechanic.
+              In the long run, I hope to continue experimenting, collaborating with other developers, and eventually build toward founding my own indie studio, creating games that combine thoughtful mechanics with meaningful storytelling.
             </p>
           </div>
         </section>
