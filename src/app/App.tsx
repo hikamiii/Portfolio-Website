@@ -38,9 +38,25 @@ function easeInOutCubic(progress: number) {
 
 const SECTION_SCROLL_OFFSET = 40;
 const CV_FILE_NAME = 'Nguyen Duc Son Hai_CV.pdf';
-const CV_PDF_URL = encodeURI(`/cv/${CV_FILE_NAME}`);
+const CV_PDF_URL = encodeURI(`${import.meta.env.BASE_URL}cv/${CV_FILE_NAME}`);
 const CV_PREVIEW_PARAMS = '#view=FitH&toolbar=0&navpanes=0&scrollbar=0';
 const CV_MODAL_PARAMS = '#view=FitV&toolbar=0&navpanes=0&scrollbar=0';
+
+function withBaseUrl(url: string) {
+  if (!url) {
+    return url;
+  }
+
+  if (/^(https?:)?\/\//.test(url)) {
+    return url;
+  }
+
+  if (url.startsWith('/')) {
+    return `${import.meta.env.BASE_URL}${url.slice(1)}`;
+  }
+
+  return url;
+}
 
 function ItchIoIcon() {
   return (
@@ -191,7 +207,7 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
 
           <div className="aspect-[16/8] bg-muted">
             <ImageWithFallback
-              src={project.image}
+              src={withBaseUrl(project.image)}
               fallbackSrc={project.fallbackImage}
               alt={project.title}
               className="h-full w-full object-cover"
@@ -224,7 +240,7 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
                         className="overflow-hidden rounded-[1rem] border border-border bg-muted"
                       >
                         <img
-                          src={image.src}
+                          src={withBaseUrl(image.src)}
                           alt={image.alt}
                           className="h-full w-full object-cover"
                           loading="lazy"
@@ -244,7 +260,7 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
                     {project.workingProcess.documents.map((doc) => (
                       <a
                         key={doc.url}
-                        href={doc.url}
+                        href={withBaseUrl(doc.url)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-primary px-5 py-3 text-sm font-medium text-primary transition-colors"
@@ -603,7 +619,7 @@ export default function App() {
               >
                 <div className="mb-4 aspect-[16/10] overflow-hidden rounded-[0.25rem] bg-muted">
                   <ImageWithFallback
-                    src={project.image}
+                    src={withBaseUrl(project.image)}
                     fallbackSrc={project.fallbackImage}
                     alt={project.title}
                     className="h-full w-full object-cover"
