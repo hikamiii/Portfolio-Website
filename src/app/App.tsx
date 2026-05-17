@@ -57,6 +57,25 @@ function withBaseUrl(url: string) {
   return url;
 }
 
+function isLikelyLocalAsset(url: string) {
+  return typeof url === 'string' && (url.startsWith('/') || url.startsWith(import.meta.env.BASE_URL));
+}
+
+function preloadImage(url: string) {
+  if (!url) {
+    return;
+  }
+
+  const resolvedUrl = withBaseUrl(url);
+  if (!resolvedUrl || !isLikelyLocalAsset(resolvedUrl)) {
+    return;
+  }
+
+  const img = new Image();
+  img.decoding = 'async';
+  img.src = resolvedUrl;
+}
+
 function ItchIoIcon() {
   return (
     <svg
@@ -422,6 +441,7 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
                 fallbackSrc={withBaseUrl(project.image)}
                 alt={project.title}
                 className="block h-full w-full object-cover"
+                loading="eager"
               />
             </div>
           </div>
@@ -591,6 +611,35 @@ export default function App() {
     document.documentElement.setAttribute('data-theme', themeMode);
     window.localStorage.setItem('theme-mode', themeMode);
   }, [themeMode]);
+
+  useEffect(() => {
+    // Warm up the image cache so the first modal open doesn't have to fetch/decode banners.
+    const run = () => {
+      preloadImage('/cv/cv-banner.png');
+
+      for (const project of projects) {
+        preloadImage(project.image);
+        preloadImage(`/project-banners/${project.slug}-banner.png`);
+
+        const wpImages = project.workingProcess?.images ?? [];
+        for (const image of wpImages) {
+          preloadImage(image.src);
+        }
+      }
+    };
+
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    if ('requestIdleCallback' in window) {
+      const idleId = (window as any).requestIdleCallback(run, { timeout: 1500 });
+      return () => (window as any).cancelIdleCallback?.(idleId);
+    }
+
+    const timeoutId = window.setTimeout(run, 300);
+    return () => window.clearTimeout(timeoutId);
+  }, []);
 
   useEffect(() => {
     const handleHashChange = () => {
