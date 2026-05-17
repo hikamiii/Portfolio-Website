@@ -4,7 +4,7 @@
 
 ## Overview
 
-Ghost Inc. uses vocal input as a core mechanic rather than a novelty. The player performs, improvises, and experiments with delivery to create different outcomes.
+Ghost Inc. uses vocal input as a core mechanic. The player performs, improvises, and experiments with delivery to create different outcomes.
 
 ## Core Ideas
 

@@ -39,7 +39,7 @@ export const projects: Project[] = [
     fallbackImage: "https://images.unsplash.com/photo-1660507224958-729c18ba1277?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
     itchUrl: "https://hikamiii.itch.io/fih",
     itchLabel: "Play on itch.io",
-    tags: ["Adventure", "Browser"],
+    tags: ["Adventure", "Puzzle"],
     markdown: fihContent,
   },
   {
@@ -94,7 +94,7 @@ export const projects: Project[] = [
     fallbackImage: "https://images.unsplash.com/photo-1709229001931-39ef155e40f8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
     itchUrl: "https://topeydopey.itch.io/runic-arcana",
     itchLabel: "Open on itch.io",
-    tags: ["Fantasy", "Pixel Art"],
+    tags: ["Fantasy", "Adventure"],
     markdown: runicArcanaContent,
   },
   {
@@ -105,7 +105,7 @@ export const projects: Project[] = [
     fallbackImage: "https://images.unsplash.com/photo-1546949268-4d54c6adf6cc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
     itchUrl: "https://hikamiii.itch.io/solve-no-scroll",
     itchLabel: "Play on itch.io",
-    tags: ["Platformer", "Browser"],
+    tags: ["Platformer", "Puzzle"],
     markdown: solveNoScrollContent,
   },
 ];

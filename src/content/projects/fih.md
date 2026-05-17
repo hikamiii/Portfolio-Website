@@ -4,7 +4,9 @@
 
 ## Overview
 
-Fih turns quiet exploration into a playful rule-breaking loop. Each location feels slightly absurd, and that absurdity becomes the charm of the experience.
+Fih is a short, surreal fishing adventure set on a quiet island where fish appear in the wrong places, for reasons no one fully explains.
+
+The game turns quiet exploration into a playful rule-breaking loop. Each location feels slightly absurd, and that absurdity becomes the charm of the experience.
 
 ## Core Ideas
 
