@@ -1,18 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { ArrowLeft, Download, ExternalLink, FileText, Mail, Github, Linkedin, Moon, Sun, X } from 'lucide-react';
-import { Document, Page, pdfjs } from 'react-pdf';
-import 'react-pdf/dist/Page/AnnotationLayer.css';
 import { ImageWithFallback } from './components/figma/ImageWithFallback';
 import { projects, type Project } from './projects';
-import cvPdf from '../../Other/Nguyen Duc Son Hai_CV.pdf';
 
 type ThemeMode = 'white' | 'black';
-
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url,
-).toString();
 
 function getProjectSlugFromHash(hash: string) {
   const match = hash.match(/^#\/projects\/([^/]+)$/);
@@ -46,6 +38,9 @@ function easeInOutCubic(progress: number) {
 
 const SECTION_SCROLL_OFFSET = 40;
 const CV_FILE_NAME = 'Nguyen Duc Son Hai_CV.pdf';
+const CV_PDF_URL = encodeURI(`/cv/${CV_FILE_NAME}`);
+const CV_PREVIEW_PARAMS = '#view=FitH&toolbar=0&navpanes=0&scrollbar=0';
+const CV_MODAL_PARAMS = '#view=FitV&toolbar=0&navpanes=0&scrollbar=0';
 
 function ItchIoIcon() {
   return (
@@ -57,81 +52,6 @@ function ItchIoIcon() {
     >
       <path d="M16 5C12.748 5 8.312 5.051 7.412 5.131C6.402 5.737 4.403 8.031 4.383 8.627L4.383 9.627C4.383 10.89 5.566 12 6.637 12C7.92 12 8.99 10.93 8.99 9.668C8.99 10.93 10.03 12 11.313 12C12.605 12 13.605 10.931 13.605 9.668C13.605 10.93 14.695 12 15.988 12L16.01 12C17.303 12 18.393 10.931 18.393 9.668C18.393 10.93 19.403 12 20.686 12C21.969 12 23.01 10.931 23.01 9.668C23.01 10.93 24.08 12 25.363 12C26.434 12 27.615 10.89 27.615 9.627L27.615 8.627C27.595 8.031 25.596 5.737 24.586 5.131C21.444 5.019 19.252 5 16 5ZM13.551 11.742C12.498 13.552 9.852 13.574 8.82 11.754C8.19 12.846 6.764 13.268 6.154 13.061C5.976 14.96 5.853 24.709 7.146 26.344C10.943 27.229 21.165 27.21 24.854 26.344C26.349 24.82 26.014 14.822 25.846 13.061C25.236 13.268 23.809 12.846 23.189 11.754C22.146 13.574 19.501 13.552 18.449 11.742C18.124 12.332 17.367 13.109 16 13.109C14.997 13.148 14.052 12.607 13.551 11.742ZM11.42 14.01C12.22 14.01 12.95 14 13.83 14.98C15.28 14.83 16.72 14.83 18.17 14.98C19.06 14.01 19.78 14.01 20.58 14.01C23.16 14.01 23.781 17.82 24.711 21.1C25.551 24.15 24.429 24.23 23.039 24.23C20.969 24.15 19.82 22.651 19.82 21.141C17.89 21.461 14.81 21.581 12.18 21.141C12.18 22.651 11.031 24.15 8.961 24.23C7.571 24.23 6.449 24.15 7.289 21.1C8.219 17.8 8.84 14.01 11.42 14.01ZM16 16.877C16 16.877 14.306 18.439 14 18.984L15.107 18.943L15.107 19.91C15.107 19.968 15.926 19.918 16 19.918C16.447 19.935 16.893 19.951 16.893 19.91L16.893 18.943L18 18.984C17.694 18.438 16 16.877 16 16.877Z" />
     </svg>
-  );
-}
-
-function useElementWidth<T extends HTMLElement>() {
-  const ref = useRef<T | null>(null);
-  const [width, setWidth] = useState(0);
-
-  useEffect(() => {
-    const element = ref.current;
-
-    if (!element) {
-      return;
-    }
-
-    const updateWidth = () => {
-      setWidth(element.clientWidth);
-    };
-
-    updateWidth();
-
-    const resizeObserver = new ResizeObserver(() => {
-      updateWidth();
-    });
-
-    resizeObserver.observe(element);
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, []);
-
-  return [ref, width] as const;
-}
-
-function PdfLoadingState({ heightClassName }: { heightClassName: string }) {
-  return (
-    <div className={`flex w-full items-center justify-center text-sm text-muted-foreground ${heightClassName}`}>
-      Loading PDF...
-    </div>
-  );
-}
-
-function PdfErrorState({ heightClassName }: { heightClassName: string }) {
-  return (
-    <div className={`flex w-full items-center justify-center px-6 text-center text-sm text-muted-foreground ${heightClassName}`}>
-      Failed to load the PDF preview.
-    </div>
-  );
-}
-
-function CvPreviewDocument() {
-  const [containerRef, containerWidth] = useElementWidth<HTMLDivElement>();
-
-  return (
-    <div
-      ref={containerRef}
-      className="relative flex h-[24rem] items-start justify-center overflow-hidden rounded-[1rem] border border-border bg-white"
-    >
-      {containerWidth > 0 ? (
-        <Document
-          file={cvPdf}
-          loading={<PdfLoadingState heightClassName="h-[24rem]" />}
-          error={<PdfErrorState heightClassName="h-[24rem]" />}
-        >
-          <Page
-            pageNumber={1}
-            width={containerWidth}
-            renderTextLayer={false}
-            renderAnnotationLayer={false}
-          />
-        </Document>
-      ) : (
-        <PdfLoadingState heightClassName="h-[24rem]" />
-      )}
-    </div>
   );
 }
 
@@ -291,6 +211,55 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
             </div>
 
             <MarkdownContent content={project.markdown} project={project} />
+
+            {project.workingProcess && (
+              <div className="mt-14">
+                <h2 className="mb-6 text-3xl">Working Process</h2>
+
+                {project.workingProcess.images && project.workingProcess.images.length > 0 && (
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {project.workingProcess.images.map((image) => (
+                      <figure
+                        key={image.src}
+                        className="overflow-hidden rounded-[1rem] border border-border bg-muted"
+                      >
+                        <img
+                          src={image.src}
+                          alt={image.alt}
+                          className="h-full w-full object-cover"
+                          loading="lazy"
+                        />
+                        {image.caption && (
+                          <figcaption className="px-4 py-3 text-sm text-muted-foreground">
+                            {image.caption}
+                          </figcaption>
+                        )}
+                      </figure>
+                    ))}
+                  </div>
+                )}
+
+                {project.workingProcess.documents && project.workingProcess.documents.length > 0 && (
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    {project.workingProcess.documents.map((doc) => (
+                      <a
+                        key={doc.url}
+                        href={doc.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-primary px-5 py-3 text-sm font-medium text-primary transition-colors"
+                      >
+                        <span className="absolute inset-0 origin-left scale-x-0 bg-primary transition-transform duration-300 ease-out group-hover:scale-x-100" />
+                        <span className="relative z-10 transition-colors duration-300 group-hover:text-primary-foreground">
+                          {doc.label}
+                        </span>
+                        <ExternalLink className="relative z-10 h-4 w-4 transition-colors duration-300 group-hover:text-primary-foreground" />
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -299,9 +268,6 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
 }
 
 function CvModal({ onClose }: { onClose: () => void }) {
-  const [numPages, setNumPages] = useState(0);
-  const [containerRef, containerWidth] = useElementWidth<HTMLDivElement>();
-
   return (
     <div
       className="fixed inset-0 z-[100] bg-black/30 px-4 py-6 backdrop-blur-sm sm:px-6 sm:py-8"
@@ -337,7 +303,7 @@ function CvModal({ onClose }: { onClose: () => void }) {
             </div>
             <div className="mr-12 flex items-center gap-3 text-muted-foreground">
               <a
-                href={cvPdf}
+                href={CV_PDF_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="transition-colors hover:text-primary"
@@ -346,7 +312,7 @@ function CvModal({ onClose }: { onClose: () => void }) {
                 <ExternalLink className="h-5 w-5" />
               </a>
               <a
-                href={cvPdf}
+                href={CV_PDF_URL}
                 download
                 className="transition-colors hover:text-primary"
                 aria-label="Download CV PDF"
@@ -357,31 +323,12 @@ function CvModal({ onClose }: { onClose: () => void }) {
           </div>
 
           <div className="bg-muted p-4">
-            <div ref={containerRef} className="mx-auto w-full max-w-4xl">
-              <Document
-                file={cvPdf}
-                onLoadSuccess={({ numPages: loadedPages }) => setNumPages(loadedPages)}
-                loading={<PdfLoadingState heightClassName="h-[85vh]" />}
-                error={<PdfErrorState heightClassName="h-[85vh]" />}
-              >
-                {containerWidth > 0 && numPages > 0 ? (
-                  <div className="space-y-6">
-                    {Array.from({ length: numPages }, (_, index) => (
-                      <div
-                        key={index + 1}
-                        className="overflow-hidden rounded-[1rem] border border-border bg-white shadow-sm"
-                      >
-                        <Page
-                          pageNumber={index + 1}
-                          width={containerWidth}
-                          renderTextLayer={false}
-                          renderAnnotationLayer
-                        />
-                      </div>
-                    ))}
-                  </div>
-                ) : null}
-              </Document>
+            <div className="overflow-hidden rounded-[1rem] border border-border bg-white">
+              <iframe
+                src={`${CV_PDF_URL}${CV_MODAL_PARAMS}`}
+                title="Nguyen Duc Son Hai CV Full Preview"
+                className="h-[85vh] w-full"
+              />
             </div>
           </div>
         </div>
@@ -706,7 +653,7 @@ export default function App() {
                 </div>
                 <div className="flex items-center gap-3 text-muted-foreground transition-colors group-hover:text-primary">
                   <a
-                    href={cvPdf}
+                    href={CV_PDF_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(event) => event.stopPropagation()}
@@ -716,7 +663,7 @@ export default function App() {
                     <ExternalLink className="h-5 w-5" />
                   </a>
                   <a
-                    href={cvPdf}
+                    href={CV_PDF_URL}
                     download
                     onClick={(event) => event.stopPropagation()}
                     className="transition-colors hover:text-primary"
@@ -729,7 +676,13 @@ export default function App() {
 
               <div className="bg-muted p-4">
                 <div className="relative">
-                  <CvPreviewDocument />
+                  <div className="relative overflow-hidden rounded-[1rem] border border-border bg-white">
+                    <iframe
+                      src={`${CV_PDF_URL}${CV_PREVIEW_PARAMS}`}
+                      title="Nguyen Duc Son Hai CV"
+                      className="pointer-events-none h-[24rem] w-full"
+                    />
+                  </div>
                   <div
                     className="absolute inset-0 cursor-pointer"
                     aria-hidden="true"

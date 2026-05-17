@@ -17,6 +17,9 @@ function figmaAssetResolver() {
 }
 
 export default defineConfig({
+  // For GitHub Pages (served from /<repo>/), set BASE_PATH in CI to `/<repo>/`.
+  // Locally this stays `/`.
+  base: process.env.BASE_PATH ?? '/',
   plugins: [
     figmaAssetResolver(),
     // The React and Tailwind plugins are both required for Make, even if

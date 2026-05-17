@@ -16,6 +16,17 @@ export type Project = {
   itchUrl?: string;
   itchLabel?: string;
   tags: string[];
+  workingProcess?: {
+    images?: Array<{
+      src: string;
+      alt: string;
+      caption?: string;
+    }>;
+    documents?: Array<{
+      label: string;
+      url: string;
+    }>;
+  };
   markdown: string;
 };
 
@@ -29,6 +40,18 @@ export const projects: Project[] = [
     itchUrl: "https://hikamiii.itch.io/stumble-couple",
     itchLabel: "Open on itch.io",
     tags: ["Narrative", "Co-op"],
+    workingProcess: {
+      images: [
+        {
+          src: "/working-process/stumble-couple/work-1.png",
+          alt: "Stumble Couple working process image 1",
+        },
+        {
+          src: "/working-process/stumble-couple/work-2.png",
+          alt: "Stumble Couple working process image 2",
+        },
+      ],
+    },
     markdown: stumbleCoupleContent,
   },
   {
@@ -95,6 +118,20 @@ export const projects: Project[] = [
     itchUrl: "https://topeydopey.itch.io/runic-arcana",
     itchLabel: "Open on itch.io",
     tags: ["Fantasy", "Adventure"],
+    workingProcess: {
+      images: [
+        {
+          src: "/working-process/runic-arcana/work.png",
+          alt: "Runic Arcana working process image",
+        },
+      ],
+      documents: [
+        {
+          label: "Runic Arcana GDD (PDF)",
+          url: "/working-process/runic-arcana/gdd.pdf",
+        },
+      ],
+    },
     markdown: runicArcanaContent,
   },
   {
