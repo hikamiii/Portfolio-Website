@@ -12,6 +12,6 @@
 - Short sessions with strong replay value
 - Pressure that increases through timing and pattern mastery
 
-## What Makes It Interesting
+## Design principles
 
 The game turns a familiar phrase into a mechanical promise. Every extra moment survived feels earned, which makes the central loop easy to grasp and satisfying to chase.

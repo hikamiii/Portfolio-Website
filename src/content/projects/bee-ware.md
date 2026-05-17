@@ -4,14 +4,14 @@
 
 ## Overview
 
-Bee-Ware! mixes cute presentation with urgent decision-making. The player expands, gathers, and defends at the same time, creating a constant push between growth and survival.
+Bee-Ware! is a small-scale RTS challenge about protecting a new hive in the woods. You plan your days, gather nectar, build up your defenses, and push outward, knowing each decision can swing the future of the colony.
 
 ## Core Ideas
 
-- Resource gathering under pressure
-- Hive management with escalating threats
-- RTS-inspired pacing in a compact format
+- Day-by-day planning with consequences
+- Resource collection paired with base defense
+- Expansion and army setup under constant threat
 
-## What Makes It Interesting
+## Design principles
 
-The tone is playful, but the structure stays sharp. The project works because it frames colony management as an energetic balancing act instead of a slow simulation.
+The game keeps the tone cute while the choices stay tense. Progress comes from balancing growth, security, and reach, with danger always close enough to punish careless planning.

@@ -4,16 +4,14 @@
 
 ## Overview
 
-Fih is a short, surreal fishing adventure set on a quiet island where fish appear in the wrong places, for reasons no one fully explains.
-
-The game turns quiet exploration into a playful rule-breaking loop. Each location feels slightly absurd, and that absurdity becomes the charm of the experience.
+Fih is a short, surreal fishing adventure on a quiet island where fish show up where they absolutely should not. You arrive as a visitor, wander around, and follow a simple goal: explore the island and hunt for the Legendary Fish.
 
 ## Core Ideas
 
-- Relaxed fishing with light exploration
-- Strange and surprising fishing spots
-- A playful tone built around discovery
+- Low-stress exploration paired with fishing
+- “Wrong place” catches that reward curiosity
+- A light, playful tone built around surprise
 
-## What Makes It Interesting
+## Design principles
 
-The project treats fishing less like a simulation and more like a way to frame curiosity. The pleasure comes from asking, "Can I fish here?" and letting the answer be delightfully unexpected.
+Fishing is used as a curiosity engine, not a simulation. The design nudges the player to poke at the world, try obvious and non-obvious spots, and enjoy the delight of being proven wrong in the best way.

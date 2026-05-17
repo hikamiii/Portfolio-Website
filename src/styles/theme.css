@@ -39,6 +39,11 @@
   --sidebar-accent-foreground: #4A4A5A;
   --sidebar-border: rgba(155, 126, 189, 0.2);
   --sidebar-ring: #9B7EBD;
+
+  /* Scrollbars (light theme) */
+  --scrollbar-track: #ffffff;
+  --scrollbar-thumb: rgba(74, 74, 90, 0.28);
+  --scrollbar-thumb-hover: rgba(74, 74, 90, 0.45);
 }
 
 [data-theme="black"] {
@@ -76,6 +81,11 @@
   --sidebar-accent-foreground: #F3EEE7;
   --sidebar-border: rgba(243, 238, 231, 0.12);
   --sidebar-ring: #9B7EBD;
+
+  /* Scrollbars (dark theme) */
+  --scrollbar-track: #171411;
+  --scrollbar-thumb: rgba(243, 238, 231, 0.22);
+  --scrollbar-thumb-hover: rgba(243, 238, 231, 0.34);
 }
 
 @theme inline {

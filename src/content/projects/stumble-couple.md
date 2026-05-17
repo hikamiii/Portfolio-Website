@@ -4,14 +4,14 @@
 
 ## Overview
 
-Stumble Couple is built around small moments of misalignment. Players are close to each other physically, but they rarely want the same thing at the same time. The game turns that friction into both comedy and tenderness.
+Stumble Couple is a short local co-op game where you race, trip, and laugh your way forward as an exhausted couple. Movement is intentionally awkward: every step can go wrong, every fall becomes part of the story, and small recoveries feel like tiny wins you earn together.
 
 ## Core Ideas
 
-- Two-player collaboration with imperfect communication
-- Shared spaces that react differently to each player
-- Small mechanics that reinforce emotional tension
+- Physics-heavy movement where mistakes are expected
+- Two-player progress that depends on staying in sync
+- Comedy and closeness created through shared struggles and recovery
 
-## What Makes It Interesting
+## Design principles
 
-Instead of treating co-op as pure teamwork, the game explores how cooperation can be messy, awkward, and intimate. Progress comes from understanding the other player rather than simply completing tasks faster.
+Clumsiness is the point, not a flaw. The design frames failure as a shared moment that builds connection: you move forward by adapting to each other, helping each other recover, and finding rhythm in the messiness rather than executing perfect play.

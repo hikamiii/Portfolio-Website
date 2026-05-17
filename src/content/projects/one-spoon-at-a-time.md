@@ -12,6 +12,6 @@ One Spoon at a Time focuses on repetition and persistence. The core joke and the
 - Humor built from restraint and repetition
 - A compact structure that turns a tiny action into tension
 
-## What Makes It Interesting
+## Design principles
 
 The concept works because it commits fully to a narrow idea. By refusing to overcomplicate the loop, the game lets the player feel every minor gain.

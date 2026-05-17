@@ -186,63 +186,165 @@ function MarkdownContent({ content, project }: { content: string; project: Proje
     .map((block) => block.trim())
     .filter(Boolean);
 
-  return (
-    <div className="space-y-6">
-      {blocks.map((block, index) => {
-        if (block === "{{ITCH_BUTTON}}" && project.itchUrl) {
-          return (
-            <a
-              key={index}
-              href={project.itchUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-primary px-5 py-3 text-sm font-medium text-primary transition-colors"
-            >
-              <span className="absolute inset-0 origin-left scale-x-0 bg-primary transition-transform duration-300 ease-out group-hover:scale-x-100" />
-              <span className="relative z-10 transition-colors duration-300 group-hover:text-primary-foreground">
-                {project.itchLabel ?? "Play on itch.io"}
-              </span>
-              <ExternalLink className="relative z-10 h-4 w-4 transition-colors duration-300 group-hover:text-primary-foreground" />
-            </a>
-          );
-        }
+  const workingProcess = project.workingProcess;
 
-        if (block.startsWith("# ")) {
-          return (
-            <h1 key={index} className="my-[5%] text-7xl font-black">
-              {block.slice(2)}
-            </h1>
-          );
-        }
+  const renderWorkingProcess = () => {
+    if (!workingProcess) {
+      return null;
+    }
 
-        if (block.startsWith("## ")) {
-          return (
-            <h2 key={index} className="mb-0 text-2xl">
-              {block.slice(3)}
-            </h2>
-          );
-        }
+    return (
+      <div className="mt-14">
+        <h2 className="mb-6 text-3xl">Working Process</h2>
 
-        if (block.split("\n").every((line) => line.startsWith("- "))) {
-          return (
-            <ul key={index} className="space-y-3 pl-5 text-foreground">
-              {block.split("\n").map((line) => (
-                <li key={line} className="list-disc leading-relaxed">
-                  {line.slice(2)}
-                </li>
-              ))}
-            </ul>
-          );
-        }
+        {workingProcess.images && workingProcess.images.length > 0 && (
+          <div className="space-y-4">
+            {workingProcess.images.map((image) => (
+              <figure
+                key={image.src}
+                className="overflow-hidden rounded-[1rem] border border-border bg-white"
+              >
+                <img
+                  src={withBaseUrl(image.src)}
+                  alt={image.alt}
+                  className="block h-auto max-h-[70vh] w-full object-contain"
+                  loading="lazy"
+                />
+                {image.caption && (
+                  <figcaption className="px-4 py-3 text-sm text-muted-foreground">
+                    {image.caption}
+                  </figcaption>
+                )}
+              </figure>
+            ))}
+          </div>
+        )}
 
-        return (
-          <p key={index} className="text-foreground leading-relaxed">
-            {block}
-          </p>
+        {workingProcess.documents && workingProcess.documents.length > 0 && (
+          <div className="mt-6 flex flex-wrap gap-3">
+            {workingProcess.documents.map((doc) => (
+              <a
+                key={doc.url}
+                href={withBaseUrl(doc.url)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-primary px-5 py-3 text-sm font-medium text-primary transition-colors"
+              >
+                <span className="absolute inset-0 origin-left scale-x-0 bg-primary transition-transform duration-300 ease-out group-hover:scale-x-100" />
+                <span className="relative z-10 transition-colors duration-300 group-hover:text-primary-foreground">
+                  {doc.label}
+                </span>
+                <ExternalLink className="relative z-10 h-4 w-4 transition-colors duration-300 group-hover:text-primary-foreground" />
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const renderBlocks = () => {
+    const nodes: React.ReactNode[] = [];
+    let inOverviewSection = false;
+    let didInsertWorkingProcess = false;
+
+    for (let index = 0; index < blocks.length; index += 1) {
+      const block = blocks[index];
+
+      if (block === "{{ITCH_BUTTON}}" && project.itchUrl) {
+        nodes.push(
+          <a
+            key={index}
+            href={project.itchUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-primary px-5 py-3 text-sm font-medium text-primary transition-colors"
+          >
+            <span className="absolute inset-0 origin-left scale-x-0 bg-primary transition-transform duration-300 ease-out group-hover:scale-x-100" />
+            <span className="relative z-10 transition-colors duration-300 group-hover:text-primary-foreground">
+              {project.itchLabel ?? "Play on itch.io"}
+            </span>
+            <ExternalLink className="relative z-10 h-4 w-4 transition-colors duration-300 group-hover:text-primary-foreground" />
+          </a>
         );
-      })}
-    </div>
-  );
+        continue;
+      }
+
+      if (block.startsWith("# ")) {
+        nodes.push(
+          <h1 key={index} className="my-[5%] text-7xl font-black">
+            {block.slice(2)}
+          </h1>
+        );
+        continue;
+      }
+
+      if (block.startsWith("## ")) {
+        const headingText = block.slice(3).trim();
+        const isOverview = headingText.toLowerCase() === "overview";
+
+        // Insert Working Process after the full Overview section, not after the first paragraph.
+        if (!isOverview && inOverviewSection && !didInsertWorkingProcess) {
+          const workingProcessNode = renderWorkingProcess();
+          if (workingProcessNode) {
+            nodes.push(<div key={`working-process-before-${index}`}>{workingProcessNode}</div>);
+            didInsertWorkingProcess = true;
+          }
+          inOverviewSection = false;
+        }
+
+        if (isOverview) {
+          inOverviewSection = true;
+        }
+
+        nodes.push(
+          <h2 key={index} className="mb-0 text-2xl">
+            {block.slice(3)}
+          </h2>
+        );
+        continue;
+      }
+
+      if (block.split("\n").every((line) => line.startsWith("- "))) {
+        nodes.push(
+          <ul key={index} className="space-y-3 pl-5 text-foreground">
+            {block.split("\n").map((line) => (
+              <li key={line} className="list-disc leading-relaxed">
+                {line.slice(2)}
+              </li>
+            ))}
+          </ul>
+        );
+        continue;
+      }
+
+      nodes.push(
+        <p key={index} className="text-foreground leading-relaxed">
+          {block}
+        </p>
+      );
+    }
+
+    if (inOverviewSection && !didInsertWorkingProcess) {
+      const workingProcessNode = renderWorkingProcess();
+      if (workingProcessNode) {
+        nodes.push(<div key="working-process-after-overview-end">{workingProcessNode}</div>);
+        didInsertWorkingProcess = true;
+      }
+      inOverviewSection = false;
+    }
+
+    if (!didInsertWorkingProcess) {
+      const workingProcessNode = renderWorkingProcess();
+      if (workingProcessNode) {
+        nodes.push(<div key="working-process-fallback">{workingProcessNode}</div>);
+      }
+    }
+
+    return nodes;
+  };
+
+  return <div className="space-y-6">{renderBlocks()}</div>;
 }
 
 function ProjectModal({ project, onClose }: { project: Project | null; onClose: () => void }) {
@@ -301,7 +403,7 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
     >
       <div className="mx-auto flex h-full max-w-6xl items-start justify-center">
         <div
-          className="modal-panel-enter modal-scrollbar-hidden relative max-h-full w-full overflow-y-auto rounded-[1.75rem] border border-border bg-card shadow-xl"
+          className="modal-panel-enter relative max-h-full w-full overflow-y-auto rounded-[1.75rem] border border-border bg-card shadow-xl"
           onMouseDown={(event) => event.stopPropagation()}
         >
           <button
@@ -337,55 +439,6 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
             </div>
 
             <MarkdownContent content={project.markdown} project={project} />
-
-            {project.workingProcess && (
-              <div className="mt-14">
-                <h2 className="mb-6 text-3xl">Working Process</h2>
-
-                {project.workingProcess.images && project.workingProcess.images.length > 0 && (
-                  <div className="space-y-4">
-                    {project.workingProcess.images.map((image) => (
-                      <figure
-                        key={image.src}
-                        className="overflow-hidden rounded-[1rem] border border-border bg-white"
-                      >
-                        <img
-                          src={withBaseUrl(image.src)}
-                          alt={image.alt}
-                          className="block h-auto max-h-[70vh] w-full object-contain"
-                          loading="lazy"
-                        />
-                        {image.caption && (
-                          <figcaption className="px-4 py-3 text-sm text-muted-foreground">
-                            {image.caption}
-                          </figcaption>
-                        )}
-                      </figure>
-                    ))}
-                  </div>
-                )}
-
-                {project.workingProcess.documents && project.workingProcess.documents.length > 0 && (
-                  <div className="mt-6 flex flex-wrap gap-3">
-                    {project.workingProcess.documents.map((doc) => (
-                      <a
-                        key={doc.url}
-                        href={withBaseUrl(doc.url)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-primary px-5 py-3 text-sm font-medium text-primary transition-colors"
-                      >
-                        <span className="absolute inset-0 origin-left scale-x-0 bg-primary transition-transform duration-300 ease-out group-hover:scale-x-100" />
-                        <span className="relative z-10 transition-colors duration-300 group-hover:text-primary-foreground">
-                          {doc.label}
-                        </span>
-                        <ExternalLink className="relative z-10 h-4 w-4 transition-colors duration-300 group-hover:text-primary-foreground" />
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -405,7 +458,7 @@ function CvModal({ onClose }: { onClose: () => void }) {
     >
       <div className="mx-auto flex h-full max-w-6xl items-start justify-center">
         <div
-          className="modal-panel-enter modal-scrollbar-hidden relative max-h-full w-full overflow-y-auto rounded-[1.75rem] border border-border bg-card shadow-xl"
+          className="modal-panel-enter relative max-h-full w-full overflow-y-auto rounded-[1.75rem] border border-border bg-card shadow-xl"
           onMouseDown={(event) => event.stopPropagation()}
         >
           <button
@@ -466,11 +519,11 @@ function CvModal({ onClose }: { onClose: () => void }) {
 export default function App() {
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
     if (typeof window === 'undefined') {
-      return 'white';
+      return 'black';
     }
 
     const savedTheme = window.localStorage.getItem('theme-mode');
-    return savedTheme === 'black' ? 'black' : 'white';
+    return savedTheme === 'white' ? 'white' : 'black';
   });
   const [hash, setHash] = useState(() => window.location.hash);
   const previousIsProjectRoute = useRef(false);
@@ -644,19 +697,19 @@ export default function App() {
               <div className="flex items-center gap-2 self-center rounded-full border border-border bg-card p-1">
                 <button
                   type="button"
-                  onClick={() => setThemeMode('white')}
-                  className={`rounded-full p-2 transition-colors ${themeMode === 'white' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-primary'}`}
-                  aria-label="Use white theme"
-                >
-                  <Sun className="h-4 w-4" />
-                </button>
-                <button
-                  type="button"
                   onClick={() => setThemeMode('black')}
                   className={`rounded-full p-2 transition-colors ${themeMode === 'black' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-primary'}`}
                   aria-label="Use black theme"
                 >
                   <Moon className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setThemeMode('white')}
+                  className={`rounded-full p-2 transition-colors ${themeMode === 'white' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-primary'}`}
+                  aria-label="Use white theme"
+                >
+                  <Sun className="h-4 w-4" />
                 </button>
               </div>
             </div>

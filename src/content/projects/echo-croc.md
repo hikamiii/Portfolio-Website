@@ -4,14 +4,14 @@
 
 ## Overview
 
-EchoCroc uses recorded player movement as the heart of its puzzle design. Your earlier attempt stays in the level, forcing you to think about space and timing in a different way.
+EchoCroc is a time-loop platformer where a curious croc steps through strange doors and immediately gets caught in repeating timelines. Each loop leaves behind a past version of you, so the level fills up with your own movement and you have to navigate the chaos you created.
 
 ## Core Ideas
 
-- Platforming built around self-generated hazards
-- Puzzle design that rewards planning and iteration
-- Time-layered movement with strong visual clarity
+- Platforming puzzles built around repeating “runs”
+- Clones of your previous attempts that become obstacles and tools
+- Timing and spacing challenges that improve through iteration
 
-## What Makes It Interesting
+## Design principles
 
-The game makes failure productive. Every attempt leaves behind information and structure, so the player gradually constructs the solution through experimentation rather than through a single perfect run.
+Every loop teaches something. Instead of resetting to nothing, the game turns attempts into visible history, encouraging players to experiment, refine their route, and “outsmart” their earlier selves step by step.

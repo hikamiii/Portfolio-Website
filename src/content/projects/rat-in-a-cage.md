@@ -12,6 +12,6 @@ This project leans into discomfort, humor, and symbolism. It is less interested 
 - Dream logic translated into interactive spaces
 - Tone driven by irony, mood, and metaphor
 
-## What Makes It Interesting
+## Design principles
 
 The strength of the project is its refusal to become ordinary. It uses surreal framing to create a distinct voice, which is often more memorable than mechanical neatness alone.
