@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+﻿import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { ArrowLeft, Download, ExternalLink, FileText, Mail, Github, Linkedin, Moon, Sun, X } from 'lucide-react';
 import { ImageWithFallback } from './components/figma/ImageWithFallback';
@@ -176,7 +176,7 @@ function CvPreviewPdf({ onOpen }: { onOpen: () => void }) {
           // eslint-disable-next-line no-console
           console.error('CV preview PDF source error', error);
         }}
-        loading={<div className="flex h-[24rem] items-center justify-center text-sm text-muted-foreground">Loading…</div>}
+        loading={<div className="flex h-[24rem] items-center justify-center text-sm text-muted-foreground">Loadingâ€¦</div>}
         error={<div className="flex h-[24rem] items-center justify-center text-sm text-muted-foreground">Failed to load.</div>}
       >
         {containerWidth > 0 && numPages > 0 ? (
@@ -770,7 +770,7 @@ export default function App() {
 
         <header className="mb-24">
           <div className="mb-4 flex items-baseline justify-between gap-8">
-            <h1 className="text-5xl leading-none">Nguyen Duc Son Hai</h1>
+            <h1 className="text-5xl leading-none">Hikami</h1>
             <div className="flex items-center gap-6">
               <nav className="flex items-center gap-8 text-[1.35rem]">
                 <a href="#projects" onClick={(event) => handleSectionLinkClick(event, 'projects')} className="text-foreground transition-colors hover:text-primary">Projects</a>
@@ -835,7 +835,7 @@ export default function App() {
           </div>
         </header>
 
-        <section id="projects" className="mb-24 scroll-mt-8">
+        <section id="projects" className="mb-24 min-h-[90vh] scroll-mt-8 py-10">
           <h2 className="mb-8 text-3xl">Projects</h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {projects.map((project) => (
@@ -870,25 +870,32 @@ export default function App() {
           </div>
         </section>
 
-        <section id="about" className="mb-24 scroll-mt-8">
+        <section id="about" className="mb-24 min-h-[90vh] scroll-mt-8 py-5">
           <h2 className="mb-8 text-3xl">About</h2>
-          <div className="max-w-3xl">
-            <p className="mb-4 text-foreground leading-relaxed">
-              I'm a game designer and developer in Ho Chi Minh City, Vietnam, studying at RMIT University. I build playful gameplay systems, experiment with mechanics, and explore how interaction and UI shape player experience.
-            </p>
-            <p className="mb-4 text-foreground leading-relaxed">
-              My work often starts with rapid prototyping and iteration. I like testing ideas quickly, seeing how players respond, and refining the design through experimentation. Because I work across both design and programming, I enjoy bridging creative ideas with technical implementation to turn concepts into playable experiences.
-            </p>
-            <p className="mb-4 text-foreground leading-relaxed">
-              I'm also interested in pushing beyond my comfort zone, such as exploring new design approaches, experimenting with unfamiliar mechanics, and discovering different ways games can convey ideas. While many of my projects focus on gameplay systems, I'm currently interested in creating deeper, more narrative-driven experiences that leave a lasting impression on players.
-            </p>
-            <p className="text-foreground leading-relaxed">
-              In the long run, I hope to continue experimenting, collaborating with other developers, and eventually build toward founding my own indie studio, creating games that combine thoughtful mechanics with meaningful storytelling.
-            </p>
+          <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_320px] md:items-start">
+            <div className="max-w-3xl">
+              <p className="mb-4 text-foreground leading-relaxed">
+                I'm a game designer and developer based in Ho Chi Minh City, Vietnam, currently studying at RMIT University. I enjoy building games that begin from strange ideas, playful mechanics, or simple "what if?" questions, then slowly grow through experimentation and iteration.
+              </p>
+              <p className="mb-4 text-foreground leading-relaxed">
+                A lot of my work starts with rapid prototyping and figuring things out as I go. I like exploring why certain interactions feel satisfying, why some mechanics naturally encourage curiosity, and how small design choices can completely change the way a player experiences a game. Since I work across both design and programming, I enjoy being able to take an idea from a rough concept to something people can actually play with.
+              </p>
+              <p className="mb-4 text-foreground leading-relaxed">
+                Recently, I've become more interested in games that leave a lasting feeling behind, not just a clever mechanic. While I still love designing gameplay systems and experimenting with interaction design, I've also been exploring more narrative-driven ideas and thinking about how games can communicate emotions, atmosphere, and personal experiences in ways other mediums can't.
+              </p>
+              <p className="text-foreground leading-relaxed">
+                Long term, I'd love to build my own indie studio someday. Mostly because I want to make cool things with people who feel just as passionate about games as I do, and create experiences that stay with players long after they finish them.
+              </p>
+            </div>
+
+            <div className="md:pt-2">
+              {/* Logo disabled for now (keeps layout space). */}
+              <div className="mx-auto w-full max-w-[320px] aspect-square" aria-hidden="true" />
+            </div>
           </div>
         </section>
 
-        <section id="cv" className="mb-24 scroll-mt-8">
+        <section id="cv" className="mb-24 min-h-[90vh] scroll-mt-8 py-5">
           <h2 className="mb-8 text-3xl">CV</h2>
           <div className="w-full">
             <div

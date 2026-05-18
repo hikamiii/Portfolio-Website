@@ -13,7 +13,8 @@
   --secondary: #E8D4F2;
   --secondary-foreground: #4A4A5A;
   --muted: #F5E6FF;
-  --muted-foreground: #8B8B9B;
+  /* Slightly darker for better readability/contrast on light background. */
+  --muted-foreground: #5F5B6D;
   --accent: #FFD6E8;
   --accent-foreground: #4A4A5A;
   --destructive: #FF9EB7;
@@ -58,7 +59,7 @@
   --secondary: #2C2520;
   --secondary-foreground: #F3EEE7;
   --muted: #2A241F;
-  --muted-foreground: #D4CCC3;
+  --muted-foreground: #DED6CD;
   --accent: #3A2C22;
   --accent-foreground: #F3EEE7;
   --destructive: #D97A58;
