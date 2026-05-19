@@ -591,7 +591,7 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
           </div>
 
           <div className="px-6 pb-[10%] pt-6 md:px-[10%] md:pt-8 md:pb-[10%] lg:px-[16%]">
-            <div className="mb-10 rounded-[1.25rem] border border-border bg-card p-6">
+            <div className="mb-10 rounded-[1.25rem] border-2 border-accent/100 bg-card p-6">
               <div className="grid grid-cols-2 gap-x-8 gap-y-6 md:grid-cols-4">
                 {frontmatter.role ? (
                   <div>
@@ -964,7 +964,7 @@ export default function App() {
 
         <header className="mb-24">
           <div className="mb-4 flex items-baseline justify-between gap-8">
-            <h1 className="text-5xl leading-none">Hikami</h1>
+            <h1 className="text-6xl leading-none md:text-7xl">Hikami</h1>
             <div className="flex items-center gap-6">
               <nav className="flex items-center gap-8 text-[1.35rem] tracking-[0.08em]">
                 <a href="#projects" onClick={(event) => handleSectionLinkClick(event, 'projects')} className="text-foreground transition-colors hover:text-primary">Projects</a>
