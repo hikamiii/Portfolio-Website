@@ -43,7 +43,7 @@ export const projects: Project[] = [
     fallbackImage: "https://images.unsplash.com/photo-1768933294252-92470e942eea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
     itchUrl: "https://hikamiii.itch.io/stumble-couple",
     itchLabel: "Play on itch.io",
-    tags: ["Narrative", "Co-op"],
+    tags: ["Solo Developer"],
     workingProcess: {
       sections: [
         {
@@ -73,7 +73,7 @@ export const projects: Project[] = [
     fallbackImage: "https://images.unsplash.com/photo-1660507224958-729c18ba1277?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
     itchUrl: "https://hikamiii.itch.io/fih",
     itchLabel: "Play on itch.io",
-    tags: ["Adventure", "Puzzle"],
+    tags: ["Game Jam", "Level Designer", "Game Designer"],
     workingProcess: {
       images: [
         {
@@ -100,7 +100,7 @@ export const projects: Project[] = [
     fallbackImage: "https://images.unsplash.com/photo-1768933294578-02022bfb7532?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
     itchUrl: "https://hikamiii.itch.io/echocroc",
     itchLabel: "Play on itch.io",
-    tags: ["Platformer", "Puzzle"],
+    tags: ["Game Jam", "Game Developer", "Game Designer"],
     workingProcess: {
       images: [
         {
@@ -127,7 +127,7 @@ export const projects: Project[] = [
     fallbackImage: "https://images.unsplash.com/photo-1709229001931-39ef155e40f8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
     itchUrl: "https://hikamiii.itch.io/bee-ware",
     itchLabel: "Play on itch.io",
-    tags: ["Strategy", "RTS"],
+    tags: ["Game Jam", "Game Developer", "Game Designer"],
     workingProcess: {
       images: [
         {
@@ -154,7 +154,7 @@ export const projects: Project[] = [
     fallbackImage: "https://images.unsplash.com/photo-1613992519026-c1a3bb8341ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
     itchUrl: "https://hikamiii.itch.io/ghost-house",
     itchLabel: "Play on itch.io",
-    tags: ["Action", "Voice Control"],
+    tags: ["Level Designer", "Game Designer", "Game Developer"],
     markdown: ghostIncContent,
   },
   {
@@ -165,7 +165,7 @@ export const projects: Project[] = [
     fallbackImage: "https://images.unsplash.com/photo-1546949268-4d54c6adf6cc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
     itchUrl: "https://topeydopey.itch.io/one-spoon-at-a-time",
     itchLabel: "Play on itch.io",
-    tags: ["Experimental", "Comedy"],
+    tags: ["Game Designer", "Game Developer", "Level Designer"],
     workingProcess: {
       images: [
         {
@@ -194,7 +194,7 @@ export const projects: Project[] = [
     fallbackImage: "https://images.unsplash.com/photo-1709229001931-39ef155e40f8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
     itchUrl: "https://topeydopey.itch.io/runic-arcana",
     itchLabel: "Play on itch.io",
-    tags: ["Fantasy", "Adventure"],
+    tags: ["Game Designer", "2D Artist", "Documentation"],
     workingProcess: {
       images: [
         {

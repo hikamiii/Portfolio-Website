@@ -1,5 +1,9 @@
 ---
-role: Game Design / Development
+role: 
+- Game Designer
+- Game Developer
+- Level Designer
+- 2D Artist
 duration: 3 months
 genre:
   - Experimental

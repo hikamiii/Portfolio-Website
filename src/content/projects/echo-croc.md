@@ -1,6 +1,8 @@
 ---
-role: Game Design / Development
-duration: 3 months
+role: 
+- Game Developer
+- Game Designer
+duration: 5 days
 genre:
   - Platformer
   - Puzzle

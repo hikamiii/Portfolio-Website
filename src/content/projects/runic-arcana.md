@@ -1,5 +1,8 @@
 ---
-role: Game Design / Development
+role: 
+- Game Designer
+- 2D Artist
+- Documentation
 duration: 3 months
 genre:
   - Fantasy

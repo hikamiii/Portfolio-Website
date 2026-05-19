@@ -7,7 +7,7 @@ import { projects, type Project } from './projects';
 type ThemeMode = 'white' | 'black';
 
 type ProjectFrontmatter = {
-  role?: string;
+  role?: string | string[];
   duration?: string;
   toolsUsed?: string[];
   genre?: string[];
@@ -78,8 +78,12 @@ function parseProjectMarkdown(rawMarkdown: string): { frontmatter: ProjectFrontm
 
   for (const [key, value] of Object.entries(data)) {
     const normalizedKey = normalizeKey(key);
-    if (normalizedKey === "role" && typeof value === "string") {
-      normalized.role = value;
+    if (normalizedKey === "role") {
+      if (typeof value === "string") {
+        normalized.role = value;
+      } else if (Array.isArray(value)) {
+        normalized.role = value;
+      }
     } else if (normalizedKey === "duration" && typeof value === "string") {
       normalized.duration = value;
     } else if (normalizedKey === "toolsused" && Array.isArray(value)) {
@@ -592,7 +596,28 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
                 {frontmatter.role ? (
                   <div>
                     <p className="inline-flex border-b border-border/60 pb-1 text-sm font-semibold uppercase tracking-[0.12em] text-foreground/90">Role</p>
-                    <p className="mt-2 text-sm text-foreground">{frontmatter.role}</p>
+                    {Array.isArray(frontmatter.role) ? (
+                      <div className="mt-2 flex flex-col gap-1">
+                        {frontmatter.role.map((line) => (
+                          <span key={line} className="text-sm text-foreground">
+                            {line}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="mt-2 flex flex-col gap-1">
+                        {String(frontmatter.role)
+                          .replace(/\\n/g, "\n")
+                          .split(/\r?\n+/)
+                          .map((line) => line.trim())
+                          .filter(Boolean)
+                          .map((line, lineIndex) => (
+                            <span key={`${line}-${lineIndex}`} className="text-sm text-foreground">
+                              {line}
+                            </span>
+                          ))}
+                      </div>
+                    )}
                   </div>
                 ) : null}
 

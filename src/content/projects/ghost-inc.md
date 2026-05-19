@@ -1,6 +1,9 @@
 ---
-role: Game Design / Development
-duration: 3 months
+role: 
+- Level Designer
+- Game Designer
+- Game Developer
+duration: 1 month
 genre:
   - Action
   - Voice Control

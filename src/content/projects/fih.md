@@ -1,6 +1,9 @@
 ---
-role: Game Design / Development
-duration: 3 months
+role: 
+- Game Designer 
+- Level Designer
+- 3D Modeler
+duration: 1 week
 genre:
   - Adventure
   - Puzzle
