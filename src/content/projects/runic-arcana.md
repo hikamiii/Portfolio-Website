@@ -1,3 +1,15 @@
+---
+role: Game Design / Development
+duration: 3 months
+genre:
+  - Fantasy
+  - Adventure
+tools_used:
+  - Unity
+  - C#
+  - Figma
+---
+
 # Runic Arcana
 
 {{ITCH_BUTTON}}
@@ -12,6 +24,6 @@ Runic Arcana leans into readable silhouettes, bold color, and an immediately leg
 - Magic-forward worldbuilding
 - Pixel-art environments that carry atmosphere
 
-## Design principles
+## Design Principles
 
 The project stands out through clarity of style. The art direction gives it personality quickly, which is critical for a game that wants players to trust its world immediately.

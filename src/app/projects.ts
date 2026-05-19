@@ -4,7 +4,6 @@ import fihContent from "../content/projects/fih.md?raw";
 import ghostIncContent from "../content/projects/ghost-inc.md?raw";
 import oneSpoonAtATimeContent from "../content/projects/one-spoon-at-a-time.md?raw";
 import runicArcanaContent from "../content/projects/runic-arcana.md?raw";
-import solveNoScrollContent from "../content/projects/solve-no-scroll.md?raw";
 import stumbleCoupleContent from "../content/projects/stumble-couple.md?raw";
 
 export type Project = {
@@ -199,16 +198,5 @@ export const projects: Project[] = [
       ],
     },
     markdown: runicArcanaContent,
-  },
-  {
-    slug: "solve-no-scroll",
-    title: "Solve no Scroll",
-    description: "Better off solving than scrolling",
-    image: "/project-thumbnails/solve-no-scroll.png",
-    fallbackImage: "https://images.unsplash.com/photo-1546949268-4d54c6adf6cc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
-    itchUrl: "https://hikamiii.itch.io/solve-no-scroll",
-    itchLabel: "Play on itch.io",
-    tags: ["Platformer", "Puzzle"],
-    markdown: solveNoScrollContent,
   },
 ];

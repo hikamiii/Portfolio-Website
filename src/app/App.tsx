@@ -6,6 +6,92 @@ import { projects, type Project } from './projects';
 
 type ThemeMode = 'white' | 'black';
 
+type ProjectFrontmatter = {
+  role?: string;
+  duration?: string;
+  toolsUsed?: string[];
+  genre?: string[];
+};
+
+function parseProjectMarkdown(rawMarkdown: string): { frontmatter: ProjectFrontmatter; content: string } {
+  // Minimal frontmatter parser for:
+  // ---
+  // role: ...
+  // duration: ...
+  // tools_used:
+  //   - ...
+  // ---
+  // <markdown body>
+  const match = rawMarkdown.match(/^---\s*\n([\s\S]*?)\n---\s*\n?/);
+  if (!match) {
+    return { frontmatter: {}, content: rawMarkdown };
+  }
+
+  const frontmatterBlock = match[1] ?? "";
+  const content = rawMarkdown.slice(match[0].length);
+
+  const data: Record<string, string | string[]> = {};
+  let currentListKey: string | null = null;
+
+  for (const rawLine of frontmatterBlock.split("\n")) {
+    const line = rawLine.trimEnd();
+    if (!line.trim()) {
+      continue;
+    }
+
+    const listItemMatch = line.match(/^\s*-\s+(.*)$/);
+    if (listItemMatch && currentListKey) {
+      const value = listItemMatch[1]?.trim();
+      if (value) {
+        const existing = data[currentListKey];
+        if (Array.isArray(existing)) {
+          existing.push(value);
+        } else {
+          data[currentListKey] = [value];
+        }
+      }
+      continue;
+    }
+
+    const kvMatch = line.match(/^\s*([A-Za-z0-9_-]+)\s*:\s*(.*)$/);
+    if (!kvMatch) {
+      currentListKey = null;
+      continue;
+    }
+
+    const key = kvMatch[1];
+    const rawValue = kvMatch[2] ?? "";
+    const value = rawValue.trim();
+
+    if (!value) {
+      currentListKey = key;
+      data[key] = [];
+      continue;
+    }
+
+    currentListKey = null;
+    data[key] = value.replace(/^["']|["']$/g, "");
+  }
+
+  const normalizeKey = (key: string) => key.replace(/[-_]/g, "").toLowerCase();
+  const normalized: ProjectFrontmatter = {};
+
+  for (const [key, value] of Object.entries(data)) {
+    const normalizedKey = normalizeKey(key);
+    if (normalizedKey === "role" && typeof value === "string") {
+      normalized.role = value;
+    } else if (normalizedKey === "duration" && typeof value === "string") {
+      normalized.duration = value;
+    } else if (normalizedKey === "toolsused" && Array.isArray(value)) {
+      normalized.toolsUsed = value;
+    } else if (normalizedKey === "genre" && Array.isArray(value)) {
+      normalized.genre = value;
+    }
+  }
+
+  return { frontmatter: normalized, content };
+}
+
 function getProjectSlugFromHash(hash: string) {
   const match = hash.match(/^#\/projects\/([^/]+)$/);
   return match ? match[1] : null;
@@ -16,7 +102,7 @@ function isCvPreviewHash(hash: string) {
 }
 
 function isSectionHash(hash: string) {
-  return /^#(about|projects|cv)$/.test(hash);
+  return /^#(about|projects|contact|cv)$/.test(hash);
 }
 
 function getHoverRotation(slug: string) {
@@ -218,7 +304,7 @@ function MarkdownContent({ content, project }: { content: string; project: Proje
 
     return (
       <div className="mt-14">
-        <h2 className="mb-6 text-3xl">Working Process</h2>
+        <h2 className="mb-6 text-3xl">Development Process</h2>
 
         {workingProcess.images && workingProcess.images.length > 0 && (
           <div className="space-y-4">
@@ -306,13 +392,15 @@ function MarkdownContent({ content, project }: { content: string; project: Proje
         const headingText = block.slice(3).trim();
         const isOverview = headingText.toLowerCase() === "overview";
 
-        // Insert Working Process after the full Overview section, not after the first paragraph.
+        // Insert Development Process + Tools Used after the full Overview section,
+        // not after the first paragraph.
         if (!isOverview && inOverviewSection && !didInsertWorkingProcess) {
           const workingProcessNode = renderWorkingProcess();
           if (workingProcessNode) {
             nodes.push(<div key={`working-process-before-${index}`}>{workingProcessNode}</div>);
             didInsertWorkingProcess = true;
           }
+
           inOverviewSection = false;
         }
 
@@ -415,6 +503,8 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
     );
   }
 
+  const { frontmatter, content: projectMarkdown } = parseProjectMarkdown(project.markdown);
+
   return (
     <div
       className="fixed inset-0 z-[100] bg-black/30 px-4 py-6 backdrop-blur-sm sm:px-6 sm:py-8"
@@ -451,18 +541,51 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
           </div>
 
           <div className="px-6 pb-[10%] pt-6 md:px-[10%] md:pt-8 md:pb-[10%] lg:px-[16%]">
-            <div className="mb-6 flex flex-wrap gap-2">
-              {project.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full bg-accent px-3 py-1 text-xs text-accent-foreground"
-                >
-                  {tag}
-                </span>
-              ))}
+            <div className="mb-10 rounded-[1.25rem] border border-border bg-card p-6">
+              <div className="grid grid-cols-2 gap-x-8 gap-y-6 md:grid-cols-4">
+                {frontmatter.role ? (
+                  <div>
+                    <p className="inline-flex border-b border-border/60 pb-1 text-sm font-semibold uppercase tracking-[0.12em] text-foreground/90">Role</p>
+                    <p className="mt-2 text-sm text-foreground">{frontmatter.role}</p>
+                  </div>
+                ) : null}
+
+                {(frontmatter.genre && frontmatter.genre.length > 0) || (project.tags && project.tags.length > 0) ? (
+                  <div>
+                    <p className="inline-flex border-b border-border/60 pb-1 text-sm font-semibold uppercase tracking-[0.12em] text-foreground/90">Genre</p>
+                    <div className="mt-2 flex flex-col gap-1">
+                      {(frontmatter.genre && frontmatter.genre.length > 0 ? frontmatter.genre : project.tags).map((tag) => (
+                        <span key={tag} className="text-sm text-foreground">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+
+                {frontmatter.toolsUsed && frontmatter.toolsUsed.length > 0 ? (
+                  <div>
+                    <p className="inline-flex border-b border-border/60 pb-1 text-sm font-semibold uppercase tracking-[0.12em] text-foreground/90">Tools Used</p>
+                    <div className="mt-2 flex flex-col gap-1">
+                      {frontmatter.toolsUsed.map((tool) => (
+                        <span key={tool} className="text-sm text-foreground">
+                          {tool}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+
+                {frontmatter.duration ? (
+                  <div>
+                    <p className="inline-flex border-b border-border/60 pb-1 text-sm font-semibold uppercase tracking-[0.12em] text-foreground/90">Duration</p>
+                    <p className="mt-2 text-sm text-foreground">{frontmatter.duration}</p>
+                  </div>
+                ) : null}
+              </div>
             </div>
 
-            <MarkdownContent content={project.markdown} project={project} />
+            <MarkdownContent content={projectMarkdown} project={project} />
           </div>
         </div>
       </div>
@@ -653,7 +776,7 @@ export default function App() {
         return;
       }
 
-      window.setTimeout(() => drain(), 0);
+      setTimeout(() => drain(), 0);
     };
 
     if (typeof window === 'undefined') {
@@ -668,10 +791,10 @@ export default function App() {
       };
     }
 
-    const timeoutId = window.setTimeout(() => drain(), 300);
+    const timeoutId = setTimeout(() => drain(), 300);
     return () => {
       cancelled = true;
-      window.clearTimeout(timeoutId);
+      clearTimeout(timeoutId);
     };
   }, []);
 
@@ -772,10 +895,10 @@ export default function App() {
           <div className="mb-4 flex items-baseline justify-between gap-8">
             <h1 className="text-5xl leading-none">Hikami</h1>
             <div className="flex items-center gap-6">
-              <nav className="flex items-center gap-8 text-[1.35rem]">
+              <nav className="flex items-center gap-8 text-[1.35rem] tracking-[0.08em]">
                 <a href="#projects" onClick={(event) => handleSectionLinkClick(event, 'projects')} className="text-foreground transition-colors hover:text-primary">Projects</a>
                 <a href="#about" onClick={(event) => handleSectionLinkClick(event, 'about')} className="text-foreground transition-colors hover:text-primary">About Me</a>
-                <a href="#cv" onClick={(event) => handleSectionLinkClick(event, 'cv')} className="text-foreground transition-colors hover:text-primary">CV</a>
+                <a href="#contact" onClick={(event) => handleSectionLinkClick(event, 'contact')} className="text-foreground transition-colors hover:text-primary">Contact</a>
               </nav>
               <div className="flex items-center gap-2 self-center rounded-full border border-border bg-card p-1">
                 <button
@@ -797,41 +920,44 @@ export default function App() {
               </div>
             </div>
           </div>
-          <p className="mb-6 text-lg text-muted-foreground">Game Designer / Developer</p>
-          <div className="flex gap-4">
-            <a
-              href="https://hikamiii.itch.io"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-foreground transition-colors hover:text-primary"
-              aria-label="itch.io"
-            >
-              <ItchIoIcon />
-            </a>
-            <a
-              href="mailto:jackson.ndsh@gmail.com"
-              className="inline-flex items-center gap-2 text-foreground transition-colors hover:text-primary"
-              aria-label="Email"
-            >
-              <Mail className="h-4 w-4" />
-            </a>
-            <a
-              href="https://github.com/hikamiii"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-foreground transition-colors hover:text-primary"
-            >
-              <Github className="h-4 w-4" />
-            </a>
-            <a
-              href="https://www.linkedin.com/in/hai-nguyen-334a88298/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-foreground transition-colors hover:text-primary"
-              aria-label="LinkedIn"
-            >
-              <Linkedin className="h-4 w-4" />
-            </a>
+          <div className="mb-6 space-y-4">
+            <p className="text-lg text-muted-foreground">Game Designer / Developer</p>
+            <div className="flex items-center gap-4">
+              <a
+                href="https://hikamiii.itch.io"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-muted-foreground transition-colors hover:text-primary"
+                aria-label="itch.io"
+              >
+                <ItchIoIcon />
+              </a>
+              <a
+                href="mailto:jackson.ndsh@gmail.com"
+                className="inline-flex items-center text-muted-foreground transition-colors hover:text-primary"
+                aria-label="Email"
+              >
+                <Mail className="h-5 w-5" />
+              </a>
+              <a
+                href="https://github.com/hikamiii"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-muted-foreground transition-colors hover:text-primary"
+                aria-label="GitHub"
+              >
+                <Github className="h-5 w-5" />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/hai-nguyen-334a88298/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-muted-foreground transition-colors hover:text-primary"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="h-5 w-5" />
+              </a>
+            </div>
           </div>
         </header>
 
@@ -842,7 +968,7 @@ export default function App() {
               <a
                 key={project.slug}
                 href={`#/projects/${project.slug}`}
-                className="group block cursor-pointer rounded-lg p-4 pb-8 transition-all duration-150 hover:bg-primary/5 hover:ring-2 hover:ring-primary hover:[transform:rotate(var(--hover-rotate))]"
+                className="group flex h-full cursor-pointer flex-col rounded-lg p-4 transition-all duration-150 hover:bg-primary/5 hover:ring-2 hover:ring-primary hover:[transform:rotate(var(--hover-rotate))]"
                 style={{ "--hover-rotate": `${getHoverRotation(project.slug)}deg` } as CSSProperties}
               >
                 <div className="mb-4 aspect-[16/10] overflow-hidden rounded-[0.25rem] bg-muted">
@@ -853,17 +979,21 @@ export default function App() {
                     className="h-full w-full object-cover"
                   />
                 </div>
-                <h3 className="mb-2 text-xl">{project.title}</h3>
-                <p className="mb-3 text-sm leading-relaxed text-muted-foreground">{project.description}</p>
-                <div className="flex flex-wrap gap-2">
-                  {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-full bg-accent px-2 py-1 text-xs text-accent-foreground"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                <div className="flex flex-1 flex-col">
+                  <h3 className="mb-2 text-xl line-clamp-1">{project.title}</h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground line-clamp-2">{project.description}</p>
+                  <div className="mt-auto pb-2 pt-4">
+                    <div className="flex flex-wrap gap-2">
+                      {project.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-full bg-accent px-2 py-1 text-xs text-accent-foreground"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </a>
             ))}
@@ -871,9 +1001,19 @@ export default function App() {
         </section>
 
         <section id="about" className="mb-24 min-h-[90vh] scroll-mt-8 py-5">
-          <h2 className="mb-8 text-3xl">About</h2>
-          <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_320px] md:items-start">
-            <div className="max-w-3xl">
+          <div className="relative">
+            <h2 className="mb-8 text-3xl">About</h2>
+
+            {/* Decorative background logo anchored to the About text block wrapper. */}
+            <img
+              src={withBaseUrl('/logo.png')}
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute right-[2%] top-0 hidden w-[100px] max-w-none opacity-65 xl:block xl:right-[-5%] xl:w-[480px] xl:opacity-75"
+              style={{ transform: 'translateY(6%) scaleX(-1) rotate(10deg)' }}
+            />
+
+            <div className="relative z-10 max-w-3xl pr-0 xl:pr-[100px]">
               <p className="mb-4 text-foreground leading-relaxed">
                 I'm a game designer and developer based in Ho Chi Minh City, Vietnam, currently studying at RMIT University. I enjoy building games that begin from strange ideas, playful mechanics, or simple "what if?" questions, then slowly grow through experimentation and iteration.
               </p>
@@ -887,65 +1027,113 @@ export default function App() {
                 Long term, I'd love to build my own indie studio someday. Mostly because I want to make cool things with people who feel just as passionate about games as I do, and create experiences that stay with players long after they finish them.
               </p>
             </div>
-
-            <div className="md:pt-2">
-              {/* Logo disabled for now (keeps layout space). */}
-              <div className="mx-auto w-full max-w-[320px] aspect-square" aria-hidden="true" />
-            </div>
           </div>
         </section>
 
-        <section id="cv" className="mb-24 min-h-[90vh] scroll-mt-8 py-5">
-          <h2 className="mb-8 text-3xl">CV</h2>
-          <div className="w-full">
-            <div
-              role="button"
-              tabIndex={0}
-              onClick={openCvPreview}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                  event.preventDefault();
-                  openCvPreview();
-                }
-              }}
-              className="group block overflow-hidden rounded-[1.5rem] border border-border bg-card transition-all duration-150 hover:bg-primary/5 hover:ring-2 hover:ring-primary"
-            >
-              <div className="flex items-center justify-between gap-4 border-b border-border px-6 py-5">
-                <div className="flex items-center gap-3">
-                  <div className="rounded-xl bg-accent p-3 text-accent-foreground">
-                    <FileText className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h3 className="mb-1 text-xl">View Resume</h3>
-                    <p className="text-sm text-muted-foreground">{CV_FILE_NAME}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 text-muted-foreground transition-colors group-hover:text-primary">
-                  <a
-                    href={CV_PDF_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(event) => event.stopPropagation()}
-                    className="transition-colors hover:text-primary"
-                    aria-label="Open CV in new tab"
-                  >
-                    <ExternalLink className="h-5 w-5" />
-                  </a>
-                  <a
-                    href={CV_PDF_URL}
-                    download
-                    onClick={(event) => event.stopPropagation()}
-                    className="transition-colors hover:text-primary"
-                    aria-label="Download CV PDF"
-                  >
-                    <Download className="h-5 w-5" />
-                  </a>
-                </div>
-              </div>
+        <section id="contact" className="mb-24 min-h-[90vh] scroll-mt-8 py-5">
+          <h2 className="mb-8 text-3xl">Contact</h2>
 
-              <div className="bg-muted p-4">
-                <div className="relative">
-                  <CvPreviewPdf onOpen={openCvPreview} />
+          <div className="max-w-3xl">
+            <p className="text-foreground leading-relaxed">
+              Best way to reach me is email. I'm also on itch.io, GitHub, and LinkedIn.
+            </p>
+
+            <div className="mt-6 flex items-center gap-5">
+              <a
+                href="mailto:jackson.ndsh@gmail.com"
+                className="inline-flex items-center gap-2 text-foreground transition-colors hover:text-primary"
+                aria-label="Email"
+              >
+                <Mail className="h-5 w-5" />
+                <span className="text-sm">jackson.ndsh@gmail.com</span>
+              </a>
+            </div>
+
+            <div className="mt-5 flex flex-wrap items-center gap-4">
+              <a
+                href="https://hikamiii.itch.io"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-muted-foreground transition-colors hover:text-primary"
+                aria-label="itch.io"
+              >
+                <ItchIoIcon />
+                <span className="text-sm">itch.io</span>
+              </a>
+              <a
+                href="https://github.com/hikamiii"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-muted-foreground transition-colors hover:text-primary"
+                aria-label="GitHub"
+              >
+                <Github className="h-5 w-5" />
+                <span className="text-sm">GitHub</span>
+              </a>
+              <a
+                href="https://www.linkedin.com/in/hai-nguyen-334a88298/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-muted-foreground transition-colors hover:text-primary"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="h-5 w-5" />
+                <span className="text-sm">LinkedIn</span>
+              </a>
+            </div>
+          </div>
+
+          <div id="cv" className="mt-12 scroll-mt-8">
+            <div className="w-full">
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={openCvPreview}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openCvPreview();
+                  }
+                }}
+                className="group block overflow-hidden rounded-[1.5rem] border border-border bg-card transition-all duration-150 hover:bg-primary/5 hover:ring-2 hover:ring-primary"
+              >
+                <div className="flex items-center justify-between gap-4 border-b border-border px-6 py-5">
+                  <div className="flex items-center gap-3">
+                    <div className="rounded-xl bg-accent p-3 text-accent-foreground">
+                      <FileText className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h4 className="mb-1 text-xl">My Resume</h4>
+                      <p className="text-sm text-muted-foreground">{CV_FILE_NAME}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 text-muted-foreground transition-colors group-hover:text-primary">
+                    <a
+                      href={CV_PDF_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(event) => event.stopPropagation()}
+                      className="transition-colors hover:text-primary"
+                      aria-label="Open CV in new tab"
+                    >
+                      <ExternalLink className="h-5 w-5" />
+                    </a>
+                    <a
+                      href={CV_PDF_URL}
+                      download
+                      onClick={(event) => event.stopPropagation()}
+                      className="transition-colors hover:text-primary"
+                      aria-label="Download CV PDF"
+                    >
+                      <Download className="h-5 w-5" />
+                    </a>
+                  </div>
+                </div>
+
+                <div className="bg-muted p-4">
+                  <div className="relative">
+                    <CvPreviewPdf onOpen={openCvPreview} />
+                  </div>
                 </div>
               </div>
             </div>
@@ -953,12 +1141,53 @@ export default function App() {
         </section>
 
         <footer className="border-t border-border pb-16 pt-8">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-muted-foreground">&copy; 2026 Nguyen Duc Son Hai. All rights reserved.</p>
-            <div className="flex gap-4">
-              <a href="#projects" onClick={(event) => handleSectionLinkClick(event, 'projects')} className="text-sm text-muted-foreground transition-colors hover:text-primary">Projects</a>
-              <a href="#about" onClick={(event) => handleSectionLinkClick(event, 'about')} className="text-sm text-muted-foreground transition-colors hover:text-primary">About</a>
-              <a href="#cv" onClick={(event) => handleSectionLinkClick(event, 'cv')} className="text-sm text-muted-foreground transition-colors hover:text-primary">CV</a>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-4 sm:justify-end">
+              <nav className="flex items-center gap-4">
+                <a href="#projects" onClick={(event) => handleSectionLinkClick(event, 'projects')} className="text-sm text-muted-foreground transition-colors hover:text-primary">PROJECTS</a>
+                <a href="#about" onClick={(event) => handleSectionLinkClick(event, 'about')} className="text-sm text-muted-foreground transition-colors hover:text-primary">ABOUT</a>
+                <a href="#contact" onClick={(event) => handleSectionLinkClick(event, 'contact')} className="text-sm text-muted-foreground transition-colors hover:text-primary">CONTACT</a>
+              </nav>
+
+              <span className="hidden h-4 w-px bg-border/60 sm:inline-block" aria-hidden="true" />
+
+              <div className="flex items-center gap-4">
+                <a
+                  href="https://hikamiii.itch.io"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-muted-foreground transition-colors hover:text-primary"
+                  aria-label="itch.io"
+                >
+                  <ItchIoIcon />
+                </a>
+                <a
+                  href="mailto:jackson.ndsh@gmail.com"
+                  className="inline-flex items-center text-muted-foreground transition-colors hover:text-primary"
+                  aria-label="Email"
+                >
+                  <Mail className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://github.com/hikamiii"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-muted-foreground transition-colors hover:text-primary"
+                  aria-label="GitHub"
+                >
+                  <Github className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/hai-nguyen-334a88298/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-muted-foreground transition-colors hover:text-primary"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="h-4 w-4" />
+                </a>
+              </div>
             </div>
           </div>
         </footer>

@@ -1,3 +1,15 @@
+---
+role: Game Design / Development
+duration: 3 months
+genre:
+  - Platformer
+  - Puzzle
+tools_used:
+  - Unity
+  - C#
+  - Figma
+---
+
 # EchoCroc
 
 {{ITCH_BUTTON}}
@@ -12,6 +24,6 @@ EchoCroc is a time-loop platformer where a curious croc steps through strange do
 - Clones of your previous attempts that become obstacles and tools
 - Timing and spacing challenges that improve through iteration
 
-## Design principles
+## Design Principles
 
 Every loop teaches something. Instead of resetting to nothing, the game turns attempts into visible history, encouraging players to experiment, refine their route, and “outsmart” their earlier selves step by step.

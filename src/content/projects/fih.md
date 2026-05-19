@@ -1,3 +1,15 @@
+---
+role: Game Design / Development
+duration: 3 months
+genre:
+  - Adventure
+  - Puzzle
+tools_used:
+  - Unity
+  - C#
+  - Figma
+---
+
 # Fih
 
 {{ITCH_BUTTON}}
@@ -12,6 +24,6 @@ Fih is a short, surreal fishing adventure on a quiet island where fish show up w
 - “Wrong place” catches that reward curiosity
 - A light, playful tone built around surprise
 
-## Design principles
+## Design Principles
 
 Fishing is used as a curiosity engine, not a simulation. The design nudges the player to poke at the world, try obvious and non-obvious spots, and enjoy the delight of being proven wrong in the best way.

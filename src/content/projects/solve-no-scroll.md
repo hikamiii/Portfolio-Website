@@ -12,6 +12,6 @@ Solve no Scroll is designed as a short and focused interruption to passive onlin
 - Short puzzles with immediate feedback
 - A theme centered on attention and intention
 
-## Design principles
+## Design Principles
 
 The concept gives the project a strong identity. It positions gameplay as an alternative to distraction, which makes even a simple interaction loop feel purposeful.

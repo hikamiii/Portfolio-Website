@@ -1,3 +1,15 @@
+---
+role: Solo Developer
+duration: 1 month
+genre:
+  - Narrative
+  - Co-op
+tools_used:
+  - Unity
+  - C#
+  - Figma
+---
+
 # Stumble Couple
 
 {{ITCH_BUTTON}}
@@ -12,6 +24,6 @@ Stumble Couple is a short local co-op game where you race, trip, and laugh your 
 - Two-player progress that depends on staying in sync
 - Comedy and closeness created through shared struggles and recovery
 
-## Design principles
+## Design Principles
 
 Clumsiness is the point, not a flaw. The design frames failure as a shared moment that builds connection: you move forward by adapting to each other, helping each other recover, and finding rhythm in the messiness rather than executing perfect play.

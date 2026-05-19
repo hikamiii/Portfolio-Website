@@ -1,3 +1,15 @@
+---
+role: Game Design / Development
+duration: 3 months
+genre:
+  - Strategy
+  - RTS
+tools_used:
+  - Unity
+  - C#
+  - Figma
+---
+
 # Bee-Ware!
 
 {{ITCH_BUTTON}}
@@ -12,6 +24,6 @@ Bee-Ware! is a small-scale RTS challenge about protecting a new hive in the wood
 - Resource collection paired with base defense
 - Expansion and army setup under constant threat
 
-## Design principles
+## Design Principles
 
 The game keeps the tone cute while the choices stay tense. Progress comes from balancing growth, security, and reach, with danger always close enough to punish careless planning.
