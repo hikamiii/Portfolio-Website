@@ -3,7 +3,7 @@ role:
 - Game Designer
 - 2D Artist
 - Documentation
-duration: 3 months
+duration: 1 month
 genre:
   - Fantasy
   - Adventure

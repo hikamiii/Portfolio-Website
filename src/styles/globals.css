@@ -2,6 +2,19 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Prevent accidental horizontal overflow causing mobile browsers to "zoom out". */
+html,
+body {
+  overflow-x: hidden;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
 /* Theme-aware scrollbars */
 html,
 body {

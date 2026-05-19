@@ -579,7 +579,7 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
           </button>
 
           <div className="overflow-hidden rounded-t-[1.75rem] border-b border-border bg-muted">
-            <div className="h-[34vh] min-h-[450px] max-h-[500px]">
+            <div className="h-[28vh] min-h-[220px] max-h-[420px] sm:h-[32vh] sm:min-h-[320px] sm:max-h-[460px] md:h-[34vh] md:min-h-[450px] md:max-h-[500px]">
               <ImageWithFallback
                 src={withBaseUrl(`/project-banners/${project.slug}-banner.png`)}
                 fallbackSrc={withBaseUrl(project.image)}
@@ -960,18 +960,18 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="mx-auto max-w-6xl px-6 py-16">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16">
 
         <header className="mb-24">
-          <div className="mb-4 flex items-baseline justify-between gap-8">
+          <div className="mb-6 flex flex-col gap-6 md:mb-4 md:flex-row md:items-baseline md:justify-between md:gap-8">
             <h1 className="text-6xl leading-none md:text-7xl">Hikami</h1>
-            <div className="flex items-center gap-6">
-              <nav className="flex items-center gap-8 text-[1.35rem] tracking-[0.08em]">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-6">
+              <nav className="flex flex-wrap items-center gap-x-6 gap-y-3 text-base tracking-[0.08em] sm:text-lg md:text-[1.35rem]">
                 <a href="#projects" onClick={(event) => handleSectionLinkClick(event, 'projects')} className="text-foreground transition-colors hover:text-primary">Projects</a>
                 <a href="#about" onClick={(event) => handleSectionLinkClick(event, 'about')} className="text-foreground transition-colors hover:text-primary">About Me</a>
                 <a href="#contact" onClick={(event) => handleSectionLinkClick(event, 'contact')} className="text-foreground transition-colors hover:text-primary">Contact</a>
               </nav>
-              <div className="flex items-center gap-2 self-center rounded-full border border-border bg-card p-1">
+              <div className="flex w-fit items-center gap-2 self-start rounded-full border border-border bg-card p-1 md:self-center">
                 <button
                   type="button"
                   onClick={() => setThemeMode('black')}

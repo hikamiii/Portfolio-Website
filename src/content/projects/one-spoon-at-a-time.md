@@ -4,7 +4,7 @@ role:
 - Game Developer
 - Level Designer
 - 2D Artist
-duration: 3 months
+duration: 1 month
 genre:
   - Experimental
   - Comedy
