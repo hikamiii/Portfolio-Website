@@ -1084,6 +1084,18 @@ export default function App() {
               className="pointer-events-none absolute right-[2%] top-0 hidden w-[100px] max-w-none opacity-65 xl:block xl:right-[-5%] xl:w-[480px] xl:opacity-75"
               style={{ transform: 'translateY(6%) scaleX(-1) rotate(10deg)' }}
             />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute right-[8%] top-0 hidden xl:block xl:right-[0%]"
+              style={{ transform: 'translateY(6%) rotate(-10deg)' }}
+            >
+              <div
+                className="mt-[500px] text-4xl leading-none text-foreground/90"
+                style={{ fontFamily: "'Itim', system-ui, sans-serif" }}
+              >
+                {themeMode === 'black' ? 'Starring Wheel!' : 'Yarn Puff!'}
+              </div>
+            </div>
 
             <div className="relative z-10 max-w-3xl pr-0 xl:pr-[100px]">
               <p className="mb-4 text-foreground leading-relaxed">
