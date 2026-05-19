@@ -1076,8 +1076,9 @@ export default function App() {
             <h2 className="mb-8 text-3xl">About</h2>
 
             {/* Decorative background logo anchored to the About text block wrapper. */}
-            <img
-              src={withBaseUrl('/logo.png')}
+            <ImageWithFallback
+              src={withBaseUrl(themeMode === 'black' ? '/logo-dark.png' : '/logo-white.png')}
+              fallbackSrc={withBaseUrl(themeMode === 'black' ? '/logo-white.png' : '/logo-dark.png')}
               alt=""
               aria-hidden="true"
               className="pointer-events-none absolute right-[2%] top-0 hidden w-[100px] max-w-none opacity-65 xl:block xl:right-[-5%] xl:w-[480px] xl:opacity-75"
