@@ -20,10 +20,10 @@ Stumble Couple is a short local co-op game where you race, trip, and laugh your 
 
 ## Core Ideas
 
-- Physics-heavy movement where mistakes are expected
-- Two-player progress that depends on staying in sync
-- Comedy and closeness created through shared struggles and recovery
+- Fine-tuned physics-based movement where difficulty are minimized to increase accessibility.
+- Two-player progress that depends on staying in sync.
+- Comedy and closeness created through shared struggles and recovery.
 
 ## Design Principles
 
-Clumsiness is the point, not a flaw. The design frames failure as a shared moment that builds connection: you move forward by adapting to each other, helping each other recover, and finding rhythm in the messiness rather than executing perfect play.
+Clumsiness is the point, not a flaw. The design frames failure as a shared moment that builds connection: Players compete with each other and try to cross the finishing line first, only to later find out that the moment spent with each other is more precious than any present, even when the moment was all a race.

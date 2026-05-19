@@ -302,9 +302,55 @@ function MarkdownContent({ content, project }: { content: string; project: Proje
       return null;
     }
 
+    const renderFigure = (figureNumber: number) => {
+      const dashed = `/working-process/${project.slug}/fig-${figureNumber}.png`;
+      const spaced = `/working-process/${project.slug}/fig ${figureNumber}.png`;
+
+      return (
+        <figure
+          key={`${project.slug}-fig-${figureNumber}`}
+          className="overflow-hidden rounded-[1rem] border border-border bg-white"
+        >
+          <ImageWithFallback
+            src={withBaseUrl(dashed)}
+            fallbackSrc={withBaseUrl(spaced)}
+            alt={`${project.title} development process figure ${figureNumber}`}
+            className="block h-auto max-h-[70vh] w-full object-contain"
+            loading="lazy"
+          />
+        </figure>
+      );
+    };
+
     return (
       <div className="mt-14">
         <h2 className="mb-6 text-3xl">Development Process</h2>
+
+        {workingProcess.sections && workingProcess.sections.length > 0 ? (
+          <div className="space-y-12">
+            {workingProcess.sections.map((section) => (
+              <section key={section.title} className="space-y-4">
+                <h3 className="text-xl text-primary">{section.title}</h3>
+                {section.description ? (
+                  <div className="space-y-2">
+                    {section.description
+                      .split(/\r?\n+/)
+                      .map((line) => line.trim())
+                      .filter(Boolean)
+                      .map((line, lineIndex) => (
+                        <p key={`${section.title}-desc-${lineIndex}`} className="text-foreground leading-[1.85]">
+                          {line}
+                        </p>
+                      ))}
+                  </div>
+                ) : null}
+                <div className="space-y-4">
+                  {section.figures.map((figureNumber) => renderFigure(figureNumber))}
+                </div>
+              </section>
+            ))}
+          </div>
+        ) : null}
 
         {workingProcess.images && workingProcess.images.length > 0 && (
           <div className="space-y-4">
@@ -313,7 +359,7 @@ function MarkdownContent({ content, project }: { content: string; project: Proje
                 key={image.src}
                 className="overflow-hidden rounded-[1rem] border border-border bg-white"
               >
-                <img
+                <ImageWithFallback
                   src={withBaseUrl(image.src)}
                   alt={image.alt}
                   className="block h-auto max-h-[70vh] w-full object-contain"
@@ -409,7 +455,7 @@ function MarkdownContent({ content, project }: { content: string; project: Proje
         }
 
         nodes.push(
-          <h2 key={index} className="mb-0 text-2xl">
+          <h2 key={index} className="mb-4 text-2xl">
             {block.slice(3)}
           </h2>
         );
@@ -420,7 +466,7 @@ function MarkdownContent({ content, project }: { content: string; project: Proje
         nodes.push(
           <ul key={index} className="space-y-3 pl-5 text-foreground">
             {block.split("\n").map((line) => (
-              <li key={line} className="list-disc leading-relaxed">
+              <li key={line} className="list-disc leading-[1.85]">
                 {line.slice(2)}
               </li>
             ))}
@@ -430,7 +476,7 @@ function MarkdownContent({ content, project }: { content: string; project: Proje
       }
 
       nodes.push(
-        <p key={index} className="text-foreground leading-relaxed">
+        <p key={index} className="text-foreground leading-[1.85]">
           {block}
         </p>
       );
@@ -455,7 +501,7 @@ function MarkdownContent({ content, project }: { content: string; project: Proje
     return nodes;
   };
 
-  return <div className="space-y-6">{renderBlocks()}</div>;
+  return <div className="space-y-7 pb-12">{renderBlocks()}</div>;
 }
 
 function ProjectModal({ project, onClose }: { project: Project | null; onClose: () => void }) {

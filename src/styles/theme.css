@@ -157,15 +157,15 @@
   }
 
   h2 {
-    font-family: 'Lora', serif;
-    font-size: var(--text-lg);
+    font-family: inherit;
+    font-size: var(--text-2xl);
     font-weight: 700;
     line-height: 1.5;
     color: #9B7EBD;
   }
 
   h3 {
-    font-family: 'Lora', serif;
+    font-family: inherit;
     font-size: var(--text-lg);
     font-weight: 700;
     line-height: 1.5;
@@ -173,7 +173,7 @@
   }
 
   h4 {
-    font-family: 'Lora', serif;
+    font-family: inherit;
     font-size: var(--text-base);
     font-weight: 700;
     line-height: 1.5;

@@ -21,6 +21,11 @@ export type Project = {
       alt: string;
       caption?: string;
     }>;
+    sections?: Array<{
+      title: string;
+      description?: string;
+      figures: number[];
+    }>;
     documents?: Array<{
       label: string;
       url: string;
@@ -40,14 +45,21 @@ export const projects: Project[] = [
     itchLabel: "Play on itch.io",
     tags: ["Narrative", "Co-op"],
     workingProcess: {
-      images: [
+      sections: [
         {
-          src: "/working-process/stumble-couple/work-1.png",
-          alt: "Stumble Couple working process image 1",
+          title: "Visual Compilation",
+          description: "Figma workspace with character's visual compilation, belongside the logo and banner's ideation",
+          figures: [1]
         },
         {
-          src: "/working-process/stumble-couple/work-2.png",
-          alt: "Stumble Couple working process image 2",
+          title: "Level Design",
+          description: "Game scene layout inside Figma workspace. The maps were designed in horizontal-mirror-friendly, keeping the game's scenes synchronized.",
+          figures: [2],
+        },
+        {
+          title: "Modular Co-op System",
+          description: "Modular physics-based co-op handler with two player controllers setup inside Input Action Asset. \nHigh scalability, with intuitive prefab setups.",
+          figures: [3]
         },
       ],
     },
