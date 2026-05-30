@@ -23,9 +23,9 @@ Fih is a short, surreal fishing adventure on a quiet island where fish show up w
 
 ## Core Ideas
 
+- A light, playful tone built around surprise
 - Low-stress exploration paired with fishing
 - “Wrong place” catches that reward curiosity
-- A light, playful tone built around surprise
 
 ## Design Principles
 

@@ -75,18 +75,26 @@ export const projects: Project[] = [
     itchLabel: "Play on itch.io",
     tags: ["Game Jam", "Level Designer", "Game Designer"],
     workingProcess: {
-      images: [
+      sections: [
         {
-          src: "/working-process/fih/work-1.png",
-          alt: "Fih working process image 1",
+          title: "Gameplay Loop",
+          description: "Quick sketch of the game's core loop, with the main gameplay pillars and their interactions.",
+          figures: [1]
         },
         {
-          src: "/working-process/fih/work-2.png",
-          alt: "Fih working process image 2",
+          title: "Art Direction",
+          description: "This moodboard was used as a reference for the game's art direction, with a focus on cozy and colorful aesthetics. It helped to establish the visual identity of the game and guided the creation of the game's assets.",
+          figures: [2]
         },
         {
-          src: "/working-process/fih/work-3.png",
-          alt: "Fih working process image 3",
+          title: "Level Design - Ideation",
+          description: "The game's map was drafted in Figma, with the different areas and their connections. This was used as a reference for the level design and helped to quickly establish the game's world and its progression.",
+          figures: [3]
+        },
+        {
+          title: "Level Design - Execution",
+          description: "The process from a quick layout of the map into the finalized world map.",
+          figures: [4, 5, 6, 7, 8],
         },
       ],
     },
@@ -102,18 +110,16 @@ export const projects: Project[] = [
     itchLabel: "Play on itch.io",
     tags: ["Game Jam", "Game Developer", "Game Designer"],
     workingProcess: {
-      images: [
+      sections: [
         {
-          src: "/working-process/echo-croc/work-1.png",
-          alt: "EchoCroc working process image 1",
+          title: "Gameplay Loop",
+          description: "Sketch of the game's core loop, with the main gameplay pillars and their interactions.",
+          figures: [1, 2]
         },
         {
-          src: "/working-process/echo-croc/work-2.png",
-          alt: "EchoCroc working process image 2",
-        },
-        {
-          src: "/working-process/echo-croc/work-3.png",
-          alt: "EchoCroc working process image 3",
+          title: "Level Design",
+          description: "Brainstorming of the level design process, from visual references, quick sketches, to the final level layout.",
+          figures: [3, 4]
         },
       ],
     },
